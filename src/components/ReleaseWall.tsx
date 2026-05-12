@@ -1,8 +1,6 @@
 "use client";
 
 import { motion } from "motion/react";
-import { brandAssets } from "@/data/brandAssets";
-import DecorativeMark from "./DecorativeMark";
 
 function PlatformCard({
   label,
@@ -42,25 +40,13 @@ function PlatformCard({
 export default function ReleaseWall() {
   return (
     <section id="latest" className="relative overflow-hidden bg-[var(--bg-soft)] py-[clamp(4rem,10vw,9rem)]">
-      <div
-        className="pointer-events-none absolute top-8 right-[4vw] select-none font-display leading-none text-white opacity-[0.025]"
-        style={{ fontSize: "clamp(8rem, 22vw, 24rem)" }}
-        aria-hidden="true"
-      >
-        315
-      </div>
-
-      <DecorativeMark src={brandAssets.marks.tag31502} className="top-12 left-[6%] w-[80px] opacity-[0.10] md:w-[100px]" />
-      <DecorativeMark src={brandAssets.marks.tally01} className="right-[5%] bottom-16 w-[60px] opacity-[0.08]" />
-
-      <div className="relative z-10 mx-auto max-w-[1440px] px-4 md:px-8">
+      <div className="mx-auto max-w-[1440px] px-4 md:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.5, ease: [0.2, 0.8, 0.2, 1] }}
         >
-          <img src={brandAssets.dividers.music} alt="" aria-hidden="true" className="section-divider-accent" draggable={false} />
           <p className="text-misregister font-mono text-xs tracking-[0.3em] text-[var(--muted)]">LATEST</p>
           <h2 className="mt-2 font-display text-4xl text-[var(--chalk)] md:text-5xl">PARANOID OUT NOW</h2>
           <div className="mt-3 flex flex-wrap items-center gap-x-6 gap-y-1">

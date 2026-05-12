@@ -1,15 +1,11 @@
 "use client";
 
 import { motion } from "motion/react";
-import { socials } from "@/data/socials";
-import { brandAssets } from "@/data/brandAssets";
-import DecorativeMark from "./DecorativeMark";
+import { socialLinks } from "@/data/socials";
 
 export default function SocialLinks() {
   return (
     <section id="socials" className="relative overflow-hidden bg-[var(--bg)] py-[clamp(4rem,10vw,9rem)]">
-      <DecorativeMark src={brandAssets.marks.arrow01} className="top-14 right-[6%] w-[70px] opacity-[0.08] md:w-[90px]" />
-
       <div className="mx-auto max-w-[1440px] px-4 md:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -17,26 +13,34 @@ export default function SocialLinks() {
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.5, ease: [0.2, 0.8, 0.2, 1] }}
         >
-          <img src={brandAssets.dividers.follow} alt="" aria-hidden="true" className="section-divider-accent" draggable={false} />
-          <p className="text-misregister font-mono text-xs tracking-[0.3em] text-[var(--muted)]">FOLLOW</p>
-          <h2 className="mt-2 font-display text-4xl text-[var(--chalk)] md:text-5xl">315 everywhere.</h2>
+          <p className="text-misregister font-mono text-xs tracking-[0.3em] text-[var(--muted)]">LINKS</p>
+          <h2 className="mt-2 font-display text-4xl text-[var(--chalk)] md:text-5xl">ALL PLATFORMS</h2>
+          <p className="mt-2 font-mono text-[11px] tracking-[0.2em] text-[var(--muted)] opacity-60">
+            Follow, stream, watch.
+          </p>
         </motion.div>
 
-        <div className="mt-10 border-t border-[var(--border)]">
-          {socials.map((social, i) => (
+        <div className="social-grid mt-10">
+          {socialLinks.map((link, i) => (
             <motion.a
-              key={social.label}
-              href={social.url}
+              key={link.label}
+              href={link.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-center justify-between border-b border-[var(--border)] py-5 transition-colors duration-[var(--fast)] hover:bg-[var(--infrared)]/10 md:py-6"
-              initial={{ opacity: 0, x: -12 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              className="social-card group"
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-20px" }}
-              transition={{ duration: 0.35, delay: i * 0.06, ease: [0.2, 0.8, 0.2, 1] }}
+              transition={{ duration: 0.35, delay: i * 0.05, ease: [0.2, 0.8, 0.2, 1] }}
             >
-              <span className="font-label text-2xl font-black tracking-[0.1em] text-[var(--chalk)] transition-colors duration-[var(--fast)] group-hover:text-[var(--infrared)] md:text-4xl">{social.label.toUpperCase()}</span>
-              <svg width="20" height="20" viewBox="0 0 12 12" fill="none" className="text-[var(--muted)] transition-colors duration-[var(--fast)] group-hover:text-[var(--infrared)]"><path d="M3 9L9 3M9 3H4M9 3V8" stroke="currentColor" strokeWidth="1.5" /></svg>
+              <div className="social-card-top">
+                <span>{link.index}</span>
+                <span>{link.type.toUpperCase()}</span>
+              </div>
+              <div className="social-card-main">
+                <h3>{link.label.toUpperCase()}</h3>
+                <span className="social-arrow" aria-hidden="true">&#x2197;</span>
+              </div>
             </motion.a>
           ))}
         </div>

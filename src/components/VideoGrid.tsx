@@ -2,14 +2,10 @@
 
 import { motion } from "motion/react";
 import { videos } from "@/data/videos";
-import { brandAssets } from "@/data/brandAssets";
-import DecorativeMark from "./DecorativeMark";
 
 export default function VideoGrid() {
   return (
     <section id="videos" className="relative overflow-hidden bg-[var(--bg)] py-[clamp(4rem,10vw,9rem)]">
-      <DecorativeMark src={brandAssets.marks.crack01} className="top-8 right-[8%] w-[120px] opacity-[0.09] md:w-[160px]" />
-
       <div className="mx-auto max-w-[1440px] px-4 md:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -17,7 +13,6 @@ export default function VideoGrid() {
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.5, ease: [0.2, 0.8, 0.2, 1] }}
         >
-          <img src={brandAssets.dividers.videos} alt="" aria-hidden="true" className="section-divider-accent wide" draggable={false} />
           <p className="text-misregister font-mono text-xs tracking-[0.3em] text-[var(--muted)]">VIDEOS</p>
           <h2 className="mt-2 font-display text-4xl text-[var(--chalk)] md:text-5xl">OFFICIAL VISUALS</h2>
         </motion.div>
@@ -36,9 +31,6 @@ export default function VideoGrid() {
               transition={{ duration: 0.4, delay: i * 0.08, ease: [0.2, 0.8, 0.2, 1] }}
               whileHover={{ scale: 1.015 }}
             >
-              {i === 0 && (
-                <DecorativeMark src={brandAssets.marks.starRed01} className="top-3 right-3 z-10 w-[36px] opacity-[0.30]" />
-              )}
               <div className="relative w-full overflow-hidden aspect-video">
                 <img src={`https://img.youtube.com/vi/${video.id}/hqdefault.jpg`} alt={`${video.title} thumbnail`} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy" />
                 <div className="absolute inset-0 bg-black/30 transition-opacity duration-200 group-hover:bg-black/10" />
