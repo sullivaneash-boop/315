@@ -297,7 +297,7 @@ function FormSection({
       onToggle={(event) => setIsOpen(event.currentTarget.open)}
       className="group border border-[var(--border)] bg-[var(--bg)] p-4 md:p-5"
     >
-      <summary className="flex cursor-pointer list-none items-center justify-between gap-4">
+      <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4">
         <span className="font-label text-2xl font-bold tracking-[0.08em] text-[var(--chalk)] uppercase">
           {title}
         </span>
@@ -459,40 +459,6 @@ export default function StartHereForm() {
       ) : null}
 
       <form onSubmit={handleSubmit} className="mt-7 space-y-4">
-        <div className="border border-[var(--border)] bg-[var(--bg)] p-4 md:p-5">
-          <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-            <div>
-              <p className="font-mono text-[11px] tracking-[0.2em] text-[var(--muted)] uppercase">
-                Minimum to start
-              </p>
-              <h3 className="mt-1 font-label text-2xl font-bold tracking-[0.08em] text-[var(--chalk)] uppercase">
-                Just the basics are enough.
-              </h3>
-            </div>
-            <p className="max-w-[340px] text-sm leading-6 text-[var(--muted)]">
-              Everything else can be added below or sent later.
-            </p>
-          </div>
-          <ul className="mt-5 grid gap-x-6 gap-y-3 text-sm leading-6 text-[var(--paper)] sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              "Artist name",
-              "Best contact/booking email",
-              "Main song/project",
-              "Best link to music/social",
-            ].map((item, index) => (
-              <li key={item} className="flex items-start gap-3">
-                <span className="mt-0.5 font-mono text-[10px] tracking-[0.18em] text-[var(--infrared)]">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-4 text-sm leading-6 text-[var(--muted)]">
-            Doesn&apos;t need to be organized. Blank is fine if you don&apos;t have it yet.
-          </p>
-        </div>
-
         <FormSection
           title="Artist Info"
           helper="Start with the basics. Blank is fine if you do not have it yet."

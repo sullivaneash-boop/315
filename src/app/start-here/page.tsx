@@ -36,12 +36,12 @@ const goodToKnowItems = [
   {
     title: "You do not need everything perfect today",
     body:
-      "Send what you have. Rough links, incomplete notes, and missing details are fine. I can clean things up as we go.",
+      "Send what you have. Rough links, missing details, and incomplete notes are fine.",
   },
   {
     title: "Upload the cleanest files you have",
     body:
-      "Original photos, videos, cover art, and graphics will look better than screenshots or saved IG posts. If IG is all you have for now, we can still work with it.",
+      "Original photos, videos, cover art, and graphics will look better than screenshots or saved IG posts.",
   },
   {
     title: "Use the form for links and notes",
@@ -51,17 +51,17 @@ const goodToKnowItems = [
   {
     title: "Domain can come later",
     body:
-      "The domain does not need to be handled before I keep working. It just needs to be bought before the finished site goes live on the official website name.",
+      "The domain does not need to be handled before I keep working. It just needs to be bought before the finished site goes live.",
   },
   {
     title: "Preview notes can be messy",
     body:
-      "When reviewing the preview, just drop raw thoughts. What hits, what feels off, what should move, what should not be included. I'll turn that into clean edits.",
+      "Drop raw thoughts while reviewing the preview. What hits, what feels off, what should move, and what should not be included.",
   },
   {
     title: "One polish pass is included before launch",
     body:
-      "After the final preview is ready, one round of small tweaks is included. Text changes, link fixes, photo swaps, video swaps, and small layout adjustments are all normal.",
+      "Text changes, link fixes, photo swaps, video swaps, and small layout adjustments are normal.",
   },
 ];
 
@@ -92,7 +92,7 @@ function Card({
 }) {
   return (
     <section
-      className={`border border-[var(--border)] bg-[var(--panel)]/88 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.28)] md:p-7 ${className}`}
+      className={`border border-[var(--border)] bg-[var(--panel)]/88 p-4 shadow-[0_24px_80px_rgba(0,0,0,0.28)] md:p-7 ${className}`}
     >
       {children}
     </section>
@@ -146,17 +146,17 @@ export default function StartHerePage() {
     <>
       <TextureOverlay />
       <main
-        className="min-h-screen bg-[var(--bg)] px-4 py-6 text-[var(--text)] md:px-8 md:py-10"
+        className="min-h-screen overflow-x-hidden bg-[var(--bg)] px-4 py-5 text-[var(--text)] md:px-8 md:py-10"
         style={{
           background:
             "radial-gradient(ellipse at 20% 0%, rgba(75,44,100,0.22) 0%, transparent 42%), radial-gradient(ellipse at 90% 18%, rgba(155,17,30,0.12) 0%, transparent 38%), var(--bg)",
         }}
       >
-        <div className="mx-auto flex max-w-[1120px] flex-col gap-5 md:gap-7">
+        <div className="mx-auto flex max-w-[1120px] flex-col gap-6 md:gap-7">
           {/* Header */}
-          <header className="border border-[var(--border)] bg-[rgba(5,5,5,0.58)] p-5 pt-10 md:p-8 md:pt-12">
+          <header className="border border-[var(--border)] bg-[rgba(5,5,5,0.58)] p-4 pt-8 md:p-8 md:pt-12">
             <SectionLabel>PRIVATE BUILD PAGE</SectionLabel>
-            <h1 className="mt-4 max-w-[780px] font-display text-[clamp(3.4rem,14vw,8rem)] leading-[0.86] tracking-[0.04em] text-[var(--chalk)] uppercase">
+            <h1 className="mt-4 max-w-[780px] font-display text-[clamp(2.85rem,13vw,8rem)] leading-[0.92] tracking-[0.04em] text-[var(--chalk)] uppercase md:leading-[0.86]">
               315mike Website Start Page
             </h1>
             <p className="mt-5 max-w-[680px] text-base leading-7 text-[var(--paper)] md:text-lg">
@@ -192,7 +192,7 @@ export default function StartHerePage() {
                 href={PAYPAL_INVOICE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex flex-col gap-2 border border-[var(--border)] bg-[var(--bg)] p-4 transition-colors hover:border-[var(--chalk)]"
+                className="flex min-h-28 flex-col gap-2 border border-[var(--border)] bg-[var(--bg)] p-4 transition-colors hover:border-[var(--chalk)]"
               >
                 <span className="font-mono text-[10px] tracking-[0.22em] text-[var(--infrared)]">01</span>
                 <span className="font-label text-xl font-bold tracking-[0.08em] text-[var(--chalk)] uppercase">Pay Deposit</span>
@@ -200,7 +200,7 @@ export default function StartHerePage() {
               </a>
               <a
                 href="#intake-form"
-                className="flex flex-col gap-2 border border-[var(--border)] bg-[var(--bg)] p-4 transition-colors hover:border-[var(--chalk)]"
+                className="flex min-h-28 flex-col gap-2 border border-[var(--border)] bg-[var(--bg)] p-4 transition-colors hover:border-[var(--chalk)]"
               >
                 <span className="font-mono text-[10px] tracking-[0.22em] text-[var(--infrared)]">02</span>
                 <span className="font-label text-xl font-bold tracking-[0.08em] text-[var(--chalk)] uppercase">Submit Info</span>
@@ -210,7 +210,7 @@ export default function StartHerePage() {
                 href={DROPBOX_OTHER_ASSETS_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex flex-col gap-2 border border-[var(--border)] bg-[var(--bg)] p-4 transition-colors hover:border-[var(--chalk)]"
+                className="flex min-h-28 flex-col gap-2 border border-[var(--border)] bg-[var(--bg)] p-4 transition-colors hover:border-[var(--chalk)]"
               >
                 <span className="font-mono text-[10px] tracking-[0.22em] text-[var(--infrared)]">03</span>
                 <span className="font-label text-xl font-bold tracking-[0.08em] text-[var(--chalk)] uppercase">Upload Assets</span>
@@ -347,16 +347,16 @@ export default function StartHerePage() {
           {/* Good to Know */}
           <section>
             <SectionLabel>GOOD TO KNOW</SectionLabel>
-            <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+            <div className="mt-4 grid gap-3 md:grid-cols-2">
               {goodToKnowItems.map((item) => (
                 <article
                   key={item.title}
-                  className="border border-[var(--border)] bg-[var(--panel)]/88 p-5"
+                  className="border border-[var(--border)] bg-[var(--panel)]/88 p-4"
                 >
-                  <h3 className="font-label text-2xl font-bold tracking-[0.08em] text-[var(--chalk)] uppercase">
+                  <h3 className="font-label text-xl font-bold leading-6 tracking-[0.04em] text-[var(--chalk)] md:text-2xl">
                     {item.title}
                   </h3>
-                  <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+                  <p className="mt-2 text-sm leading-5 text-[var(--muted)]">
                     {item.body}
                   </p>
                 </article>
