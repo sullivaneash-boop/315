@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from "react";
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/xrejjvrl";
 
 const STORAGE_KEY = "315mike-start-here-intake";
 
@@ -222,6 +223,8 @@ function buildCopyText(form: FormState) {
 export default function StartHereForm() {
   const [form, setForm] = useState<FormState>(getInitialFormState);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const [copyStatus, setCopyStatus] = useState("");
 
   useEffect(() => {
@@ -254,10 +257,36 @@ export default function StartHereForm() {
     });
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setSubmitted(true);
-    setCopyStatus("Info saved on this device. No data was sent yet.");
+    setSubmitting(true);
+    setSubmitError("");
+
+    const payload: Record<string, string> = {};
+    for (const [key, value] of Object.entries(form)) {
+      const label = fieldLabels[key as keyof FormState] ?? key;
+      payload[label] = Array.isArray(value) ? value.join(", ") : value;
+    }
+
+    try {
+      const res = await fetch(FORMSPREE_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        setSubmitted(true);
+        setCopyStatus("");
+      } else {
+        const data = await res.json().catch(() => null);
+        setSubmitError(data?.errors?.[0]?.message ?? "Something went wrong. Try again or use the copy button below.");
+      }
+    } catch {
+      setSubmitError("Could not reach the server. Check your connection or use the copy button below.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   async function handleCopyResponses() {
@@ -284,18 +313,28 @@ export default function StartHereForm() {
           </h2>
         </div>
         <p className="max-w-[380px] font-mono text-xs leading-5 text-[var(--muted)]">
-          Autosaves on this device. No sign-in, no account, no backend submission.
+          Autosaves on this device. Submitting sends responses directly. No sign-in or account needed.
         </p>
       </div>
 
       {submitted ? (
-        <div className="mt-6 border border-[rgba(255,43,43,0.25)] bg-[rgba(155,17,30,0.08)] p-4">
+        <div className="mt-6 border border-[rgba(75,200,120,0.3)] bg-[rgba(40,120,60,0.08)] p-4">
           <p className="font-label text-2xl font-bold tracking-[0.08em] text-[var(--chalk)] uppercase">
-            Info saved.
+            Info submitted.
           </p>
           <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
-            Nothing was sent to a server yet. Use the copy button below if you
-            want to send the answers manually.
+            Your responses have been sent. You can still update and resubmit if anything changes.
+          </p>
+        </div>
+      ) : null}
+
+      {submitError ? (
+        <div className="mt-6 border border-[rgba(255,43,43,0.3)] bg-[rgba(155,17,30,0.08)] p-4">
+          <p className="font-label text-lg font-bold tracking-[0.08em] text-[var(--chalk)] uppercase">
+            Submission failed
+          </p>
+          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+            {submitError}
           </p>
         </div>
       ) : null}
@@ -448,9 +487,10 @@ export default function StartHereForm() {
         <div className="flex flex-col gap-3 border border-[var(--border)] bg-[var(--bg)] p-4 sm:flex-row sm:items-center sm:justify-between">
           <button
             type="submit"
-            className="inline-flex min-h-12 items-center justify-center border border-[var(--chalk)] bg-[var(--chalk)] px-6 py-3 font-label text-sm font-bold tracking-[0.14em] text-[var(--bg)] uppercase transition-all duration-[var(--fast)] hover:translate-x-[1px] hover:-translate-y-[1px] hover:bg-transparent hover:text-[var(--chalk)]"
+            disabled={submitting}
+            className="inline-flex min-h-12 items-center justify-center border border-[var(--chalk)] bg-[var(--chalk)] px-6 py-3 font-label text-sm font-bold tracking-[0.14em] text-[var(--bg)] uppercase transition-all duration-[var(--fast)] hover:translate-x-[1px] hover:-translate-y-[1px] hover:bg-transparent hover:text-[var(--chalk)] disabled:opacity-50 disabled:pointer-events-none"
           >
-            Submit Info
+            {submitting ? "Sending..." : "Submit Info"}
           </button>
           <button
             type="button"
