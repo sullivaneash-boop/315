@@ -29,24 +29,39 @@ const updateItems = [
 
 const goodToKnowItems = [
   {
-    question: "What should I do first?",
-    answer:
-      "Handle the deposit, submit the info form, and upload the best files you have. Anything missing can be cleaned up later.",
+    title: "Deposit starts the final build",
+    body:
+      "The deposit locks in the project and lets me finish refining the private preview into the final version.",
   },
   {
-    question: "What files should I upload?",
-    answer:
-      "Clean photos, videos, cover art, graphics, or anything you want considered for the final site. Original files are better than screenshots or reposts.",
+    title: "You do not need everything perfect today",
+    body:
+      "Send what you have. Rough links, incomplete notes, and missing details are fine. I can clean things up as we go.",
   },
   {
-    question: "When does the site go live?",
-    answer:
-      "After the final preview is approved and the remaining balance is handled.",
+    title: "Upload the cleanest files you have",
+    body:
+      "Original photos, videos, cover art, and graphics will look better than screenshots or saved IG posts. If IG is all you have for now, we can still work with it.",
   },
   {
-    question: "Can the site be updated later?",
-    answer:
-      "Yes. New songs, videos, photos, booking info, and links can be updated after launch.",
+    title: "Use the form for links and notes",
+    body:
+      "The form is for music links, socials, booking info, video links, and quick direction. Bigger files should go through the upload buttons.",
+  },
+  {
+    title: "Domain can come later",
+    body:
+      "The domain does not need to be handled before I keep working. It just needs to be bought before the finished site goes live on the official website name.",
+  },
+  {
+    title: "Preview notes can be messy",
+    body:
+      "When reviewing the preview, just drop raw thoughts. What hits, what feels off, what should move, what should not be included. I'll turn that into clean edits.",
+  },
+  {
+    title: "One polish pass is included before launch",
+    body:
+      "After the final preview is ready, one round of small tweaks is included. Text changes, link fixes, photo swaps, video swaps, and small layout adjustments are all normal.",
   },
 ];
 
@@ -123,26 +138,6 @@ function SecondaryLink({
     >
       {children}
     </a>
-  );
-}
-
-function DetailCard({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <details className="group border border-[var(--border)] bg-[var(--panel)]/88 p-5 md:p-7">
-      <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-label text-2xl font-bold tracking-[0.08em] text-[var(--chalk)] uppercase">
-        <span>{title}</span>
-        <span className="font-mono text-xl text-[var(--infrared)] transition-transform group-open:rotate-45">
-          +
-        </span>
-      </summary>
-      <div className="mt-5 border-t border-[var(--border)] pt-5">{children}</div>
-    </details>
   );
 }
 
@@ -350,15 +345,21 @@ export default function StartHerePage() {
           </Card>
 
           {/* Good to Know */}
-          <section className="space-y-2">
+          <section>
             <SectionLabel>GOOD TO KNOW</SectionLabel>
-            <div className="space-y-2">
+            <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
               {goodToKnowItems.map((item) => (
-                <DetailCard key={item.question} title={item.question}>
-                  <p className="text-sm leading-6 text-[var(--muted)] md:text-base">
-                    {item.answer}
+                <article
+                  key={item.title}
+                  className="border border-[var(--border)] bg-[var(--panel)]/88 p-5"
+                >
+                  <h3 className="font-label text-2xl font-bold tracking-[0.08em] text-[var(--chalk)] uppercase">
+                    {item.title}
+                  </h3>
+                  <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+                    {item.body}
                   </p>
-                </DetailCard>
+                </article>
               ))}
             </div>
           </section>
