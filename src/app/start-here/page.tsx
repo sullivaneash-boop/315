@@ -65,13 +65,36 @@ const goodToKnowItems = [
   },
 ];
 
+const pageTitle = "315mike Website Build Start Page";
+const pageDescription =
+  "Private start page for the 315mike website build. Pay the deposit, upload files, send links and notes, review the preview, and track launch steps.";
+
 export const metadata: Metadata = {
-  title: "315mike Website Start Page",
-  description:
-    "Private project start page for the 315mike website build: payment, uploads, intake, review, and launch.",
+  metadataBase: new URL("https://315mike.vercel.app"),
+  title: pageTitle,
+  description: pageDescription,
+  alternates: {
+    canonical: "/start-here",
+  },
+  openGraph: {
+    title: pageTitle,
+    description: pageDescription,
+    url: "/start-here",
+    siteName: "315mike Website Build",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: pageTitle,
+    description: pageDescription,
+  },
   robots: {
     index: false,
     follow: false,
+    googleBot: {
+      index: false,
+      follow: false,
+    },
   },
 };
 
