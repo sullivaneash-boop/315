@@ -3,6 +3,8 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { brandAssets } from "@/data/brandAssets";
+import DecorativeMark from "./DecorativeMark";
 
 export default function Hero() {
   const wordmarkRef = useRef<HTMLHeadingElement>(null);
@@ -72,6 +74,20 @@ export default function Hero() {
           315
         </span>
       </div>
+
+      {/* Brand marks */}
+      <DecorativeMark
+        src={brandAssets.marks.star01}
+        className="top-[12%] right-[6%] w-[120px] opacity-[0.14] md:w-[160px]"
+      />
+      <DecorativeMark
+        src={brandAssets.marks.tag31501}
+        className="bottom-[18%] left-[4%] w-[100px] opacity-[0.12] md:w-[130px]"
+      />
+      <DecorativeMark
+        src={brandAssets.marks.crack01}
+        className="top-[30%] right-[2%] hidden w-[180px] opacity-[0.10] md:block md:w-[220px]"
+      />
 
       <div className="relative z-10 mx-auto w-full max-w-[1440px] px-4 pt-32 md:px-8">
         <div className="relative max-w-3xl md:py-20">

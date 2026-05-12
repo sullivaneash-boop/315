@@ -113,6 +113,21 @@ body {
   );
 }
 
+/* Decorative brand mark base class */
+.decorative-mark {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  z-index: 1;
+  opacity: 0.16;
+  max-width: 40vw;
+}
+
+/* Section divider tape accent (hidden until placement is finalized) */
+.section-divider-accent {
+  display: none;
+}
+
 /* Misregistered text shadow for section labels */
 .text-misregister {
   position: relative;
@@ -137,24 +152,6 @@ body {
 @keyframes flash-tick {
   0%, 85%, 100% { opacity: 0; }
   90%, 95% { opacity: 0.8; }
-}
-
-/* Tape lift hover: labels shift up 2px on hover */
-.tape-lift-hover {
-  transition: transform var(--fast) var(--ease-out);
-}
-.tape-lift-hover:hover {
-  transform: translateY(-2px);
-}
-
-/* Metadata crawl: slow horizontal slide for archive labels */
-.metadata-crawl {
-  animation: metadata-crawl 12s linear infinite;
-}
-
-@keyframes metadata-crawl {
-  0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(3px); }
 }
 
 /* Grain shift: prevent frozen-looking grain */
