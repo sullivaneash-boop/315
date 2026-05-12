@@ -426,10 +426,10 @@ export default function StartHereForm() {
       <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
         <div>
           <p className="text-misregister font-mono text-[11px] tracking-[0.28em] text-[var(--muted)] uppercase">
-            FILL THIS OUT WHEN YOU CAN
+            INFO FORM
           </p>
           <h2 className="mt-2 font-display text-4xl text-[var(--chalk)] uppercase md:text-5xl">
-            Send what you have
+            Fill this out when you can
           </h2>
         </div>
         <p className="max-w-[380px] font-mono text-xs leading-5 text-[var(--muted)]">
@@ -472,22 +472,25 @@ export default function StartHereForm() {
                 Minimum to start
               </p>
               <h3 className="mt-1 font-label text-2xl font-bold tracking-[0.08em] text-[var(--chalk)] uppercase">
-                Send rough links. I&apos;ll clean them up.
+                Just the basics are enough.
               </h3>
             </div>
             <p className="max-w-[340px] text-sm leading-6 text-[var(--muted)]">
               Everything else can be added below or sent later.
             </p>
           </div>
-          <ul className="mt-4 grid gap-2 text-sm leading-6 text-[var(--paper)] sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="mt-5 grid gap-x-6 gap-y-3 text-sm leading-6 text-[var(--paper)] sm:grid-cols-2 lg:grid-cols-4">
             {[
               "Artist name",
               "Best contact/booking email",
               "Main song/project",
               "Best link to music/social",
-            ].map((item) => (
-              <li key={item} className="border border-[var(--border)] bg-[var(--panel-2)] px-4 py-3">
-                {item}
+            ].map((item, index) => (
+              <li key={item} className="flex items-start gap-3">
+                <span className="mt-0.5 font-mono text-[10px] tracking-[0.18em] text-[var(--infrared)]">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <span>{item}</span>
               </li>
             ))}
           </ul>

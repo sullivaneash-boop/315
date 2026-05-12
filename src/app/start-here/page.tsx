@@ -8,15 +8,6 @@ const DROPBOX_VIDEOS_URL = "https://www.dropbox.com/request/eub9azsspfczgai7v4pe
 const DROPBOX_COVER_ART_URL = "https://www.dropbox.com/request/b0hquyhphzgpqt7itp63";
 const DROPBOX_OTHER_ASSETS_URL = "https://www.dropbox.com/request/fu8dj3851742p85zyc1j";
 
-const projectSteps = [
-  "Deposit",
-  "Send Info",
-  "Upload Files",
-  "Final Preview",
-  "Final Payment",
-  "Domain Launch",
-];
-
 const launchSteps = [
   "Submit info and upload the best available files",
   "I refine the private preview into the final version",
@@ -241,36 +232,6 @@ export default function StartHerePage() {
                 <span className="text-sm leading-6 text-[var(--muted)]">Send photos, videos, cover art, and larger files.</span>
               </a>
             </div>
-          </Card>
-
-          {/* Build Flow */}
-          <Card>
-            <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-              <div>
-                <SectionLabel>HOW IT WORKS</SectionLabel>
-                <h2 className="mt-2 font-display text-4xl text-[var(--chalk)] uppercase md:text-5xl">
-                  Build flow
-                </h2>
-              </div>
-              <p className="max-w-[320px] font-mono text-xs leading-5 text-[var(--muted)]">
-                Here&apos;s the basic path from deposit to official launch.
-              </p>
-            </div>
-            <ol className="mt-7 grid gap-2 sm:grid-cols-2 lg:grid-cols-6">
-              {projectSteps.map((step, index) => (
-                <li
-                  key={step}
-                  className="border border-[var(--border)] bg-[var(--bg)] p-4"
-                >
-                  <span className="font-mono text-[10px] tracking-[0.22em] text-[var(--infrared)]">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <p className="mt-3 font-label text-xl font-bold tracking-[0.08em] text-[var(--chalk)] uppercase">
-                    {step}
-                  </p>
-                </li>
-              ))}
-            </ol>
           </Card>
 
           {/* Payment + Uploads */}
