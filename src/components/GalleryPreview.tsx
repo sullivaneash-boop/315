@@ -3,12 +3,10 @@
 import { motion } from "motion/react";
 
 const frames = [
-  { label: "FRAME 001", span: "col-span-2 row-span-2", gradient: "from-[var(--bruise)] to-[var(--bg)]" },
-  { label: "FRAME 002", span: "", gradient: "from-[var(--panel)] to-[var(--bg-soft)]" },
-  { label: "FRAME 003", span: "", gradient: "from-[var(--panel-2)] to-[var(--violet)]/20" },
-  { label: "FRAME 004", span: "", gradient: "from-[var(--bg-soft)] to-[var(--panel)]" },
-  { label: "FRAME 005", span: "col-span-2", gradient: "from-[var(--panel)] via-[var(--bruise)]/30 to-[var(--bg)]" },
-  { label: "FRAME 006", span: "", gradient: "from-[var(--violet)]/15 to-[var(--bg)]" },
+  { label: "FRAME 001", gradient: "from-[var(--bruise)] to-[var(--bg)]" },
+  { label: "FRAME 002", gradient: "from-[var(--panel)] to-[var(--bg-soft)]" },
+  { label: "FRAME 003", gradient: "from-[var(--panel-2)] to-[var(--violet)]/20" },
+  { label: "FRAME 004", gradient: "from-[var(--bg-soft)] to-[var(--panel)]" },
 ];
 
 export default function GalleryPreview() {
@@ -36,7 +34,7 @@ export default function GalleryPreview() {
           {frames.map((frame, i) => (
             <motion.div
               key={frame.label}
-              className={`group relative overflow-hidden border border-[var(--border)] ${frame.span}`}
+              className="group relative overflow-hidden border border-[var(--border)]"
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
@@ -46,15 +44,8 @@ export default function GalleryPreview() {
                 ease: [0.2, 0.8, 0.2, 1],
               }}
             >
-              {/* Placeholder gradient fill */}
               <div
-                className={`flex aspect-square items-end justify-start bg-gradient-to-br p-4 ${frame.gradient} ${
-                  frame.span.includes("col-span-2 row-span-2")
-                    ? "min-h-[240px] md:min-h-[400px]"
-                    : frame.span.includes("col-span-2")
-                      ? "aspect-[2/1]"
-                      : ""
-                }`}
+                className={`flex aspect-square items-end justify-start bg-gradient-to-br p-4 ${frame.gradient}`}
               >
                 {/* Grain per card */}
                 <div

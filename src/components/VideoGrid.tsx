@@ -86,7 +86,7 @@ export default function VideoGrid() {
               {/* Label bar */}
               <div className="border-t border-[var(--border)] px-4 py-3">
                 <div className="flex items-center justify-between">
-                  <span className="font-mono text-xs tracking-[0.2em] text-[var(--muted)]">
+                  <span className="font-mono text-[10px] tracking-[0.2em] text-[var(--muted)] opacity-40">
                     {video.title}
                   </span>
                   <svg
@@ -103,7 +103,7 @@ export default function VideoGrid() {
                     />
                   </svg>
                 </div>
-                <p className={`mt-1 font-display text-[var(--chalk)] ${i === 0 ? "text-2xl md:text-3xl" : "text-xl md:text-2xl"}`}>
+                <p className={`text-misregister mt-1 font-mono tracking-[0.3em] text-[var(--muted)] ${i === 0 ? "text-base md:text-lg" : "text-sm md:text-base"}`}>
                   {video.song}
                 </p>
               </div>
