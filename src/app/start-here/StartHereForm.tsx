@@ -20,7 +20,6 @@ type FormState = {
   mainProject: string;
   firstChoiceDomain: string;
   backupDomains: string;
-  ownsDomain: string;
   bookingEmail: string;
   contactFor: string[];
   spotify: string;
@@ -37,9 +36,6 @@ type FormState = {
   youtubeSocial: string;
   twitter: string;
   otherSocials: string;
-  mustUsePhotos: string;
-  photosNotToUse: string;
-  visualNotes: string;
   finalNotes: string;
 };
 
@@ -49,7 +45,6 @@ const initialFormState: FormState = {
   mainProject: "",
   firstChoiceDomain: "",
   backupDomains: "",
-  ownsDomain: "not-sure",
   bookingEmail: "",
   contactFor: [],
   spotify: "",
@@ -66,9 +61,6 @@ const initialFormState: FormState = {
   youtubeSocial: "",
   twitter: "",
   otherSocials: "",
-  mustUsePhotos: "",
-  photosNotToUse: "",
-  visualNotes: "",
   finalNotes: "",
 };
 
@@ -79,7 +71,15 @@ function getInitialFormState() {
 
   try {
     const saved = window.localStorage.getItem(STORAGE_KEY);
-    return saved ? { ...initialFormState, ...JSON.parse(saved) } : initialFormState;
+    if (!saved) return initialFormState;
+    const parsed = JSON.parse(saved);
+    const merged = { ...initialFormState };
+    for (const key of Object.keys(initialFormState) as Array<keyof FormState>) {
+      if (key in parsed) {
+        (merged as Record<string, unknown>)[key] = parsed[key];
+      }
+    }
+    return merged;
   } catch {
     return initialFormState;
   }
@@ -91,7 +91,6 @@ const fieldLabels: Record<keyof FormState, string> = {
   mainProject: "Main song/project to feature right now",
   firstChoiceDomain: "First choice domain",
   backupDomains: "Backup domain ideas",
-  ownsDomain: "Does he already own a domain?",
   bookingEmail: "Best booking email",
   contactFor: "What should people contact you for?",
   spotify: "Spotify link",
@@ -108,9 +107,6 @@ const fieldLabels: Record<keyof FormState, string> = {
   youtubeSocial: "YouTube",
   twitter: "X / Twitter",
   otherSocials: "Other socials",
-  mustUsePhotos: "Any photos that must be used?",
-  photosNotToUse: "Any photos not to use?",
-  visualNotes: "Any specific visual notes?",
   finalNotes: "Anything else to know before finalizing?",
 };
 
@@ -313,9 +309,13 @@ export default function StartHereForm() {
           </h2>
         </div>
         <p className="max-w-[380px] font-mono text-xs leading-5 text-[var(--muted)]">
-          Autosaves on this device. Submitting sends responses directly. No sign-in or account needed.
+          Fill out what you have now. Anything missing can be cleaned up later.
         </p>
       </div>
+
+      <p className="mt-4 text-sm leading-6 text-[var(--muted)]">
+        Use this for links, contact info, and notes. Use the upload buttons above for photos, videos, cover art, and larger files.
+      </p>
 
       {submitted ? (
         <div className="mt-6 border border-[rgba(75,200,120,0.3)] bg-[rgba(40,120,60,0.08)] p-4">
@@ -342,7 +342,7 @@ export default function StartHereForm() {
       <form onSubmit={handleSubmit} className="mt-7 space-y-4">
         <FormSection
           title="Artist Info"
-          helper="Use the exact spelling and current release focus for the final site."
+          helper="Exact spelling matters here. This is how the name and current release focus will show on the site."
         >
           <Field
             id="artistName"
@@ -368,7 +368,7 @@ export default function StartHereForm() {
           />
         </FormSection>
 
-        <FormSection title="Domain" helper="Domain ideas are enough for now if nothing is purchased yet.">
+        <FormSection title="Domain" helper="Drop the domain ideas you like. If nothing is purchased yet, that's fine.">
           <Field
             id="firstChoiceDomain"
             label={fieldLabels.firstChoiceDomain}
@@ -383,30 +383,11 @@ export default function StartHereForm() {
             onChange={updateField}
             placeholder="315mikeofficial.com, official315mike.com"
           />
-          <div className="md:col-span-2">
-            <label
-              htmlFor="ownsDomain"
-              className="mb-1.5 block font-mono text-[11px] tracking-[0.16em] text-[var(--muted)] uppercase"
-            >
-              {fieldLabels.ownsDomain}
-            </label>
-            <select
-              id="ownsDomain"
-              name="ownsDomain"
-              value={form.ownsDomain}
-              onChange={updateField}
-              className="min-h-12 w-full border border-[var(--border)] bg-[var(--panel-2)] px-4 py-3 text-base text-[var(--chalk)] outline-none transition-colors focus:border-[var(--violet)]"
-            >
-              <option value="yes">Yes</option>
-              <option value="no">No</option>
-              <option value="not-sure">Not sure</option>
-            </select>
-          </div>
         </FormSection>
 
         <FormSection
           title="Booking / Contact"
-          helper="Pick every category that should be welcome through the site."
+          helper="Pick what people should be able to reach out about through the site."
         >
           <Field
             id="bookingEmail"
@@ -441,7 +422,7 @@ export default function StartHereForm() {
           </div>
         </FormSection>
 
-        <FormSection title="Music Links" helper="Paste whatever links are already available. Blank is fine.">
+        <FormSection title="Music Links" helper="Paste full links if you have them. If not, usernames or platform names are fine.">
           <Field id="spotify" label={fieldLabels.spotify} value={form.spotify} onChange={updateField} placeholder="https://open.spotify.com/..." />
           <Field id="appleMusic" label={fieldLabels.appleMusic} value={form.appleMusic} onChange={updateField} placeholder="https://music.apple.com/..." />
           <Field id="soundCloud" label={fieldLabels.soundCloud} value={form.soundCloud} onChange={updateField} placeholder="https://soundcloud.com/..." />
@@ -450,13 +431,13 @@ export default function StartHereForm() {
           <TextArea id="otherMusicLinks" label={fieldLabels.otherMusicLinks} value={form.otherMusicLinks} onChange={updateField} rows={3} />
         </FormSection>
 
-        <FormSection title="Video Links" helper="The main video should be the one visitors see first.">
+        <FormSection title="Video Links" helper="The main video should be the first one people see.">
           <Field id="mainVideo" label={fieldLabels.mainVideo} value={form.mainVideo} onChange={updateField} placeholder="YouTube video URL" />
           <TextArea id="otherVideos" label={fieldLabels.otherVideos} value={form.otherVideos} onChange={updateField} rows={3} placeholder="Paste one link per line if that is easier" />
           <TextArea id="videoOrderNotes" label={fieldLabels.videoOrderNotes} value={form.videoOrderNotes} onChange={updateField} rows={3} />
         </FormSection>
 
-        <FormSection title="Social Links">
+        <FormSection title="Social Links" helper="Add the main socials people should visit from the site.">
           <Field id="instagram" label={fieldLabels.instagram} value={form.instagram} onChange={updateField} placeholder="https://instagram.com/..." />
           <Field id="tiktok" label={fieldLabels.tiktok} value={form.tiktok} onChange={updateField} placeholder="https://tiktok.com/@..." />
           <Field id="youtubeSocial" label={fieldLabels.youtubeSocial} value={form.youtubeSocial} onChange={updateField} placeholder="https://youtube.com/..." />
@@ -464,23 +445,14 @@ export default function StartHereForm() {
           <TextArea id="otherSocials" label={fieldLabels.otherSocials} value={form.otherSocials} onChange={updateField} rows={3} />
         </FormSection>
 
-        <FormSection
-          title="Photos / Visual Direction"
-          helper="Notes here help avoid using the wrong image or wrong era."
-        >
-          <TextArea id="mustUsePhotos" label={fieldLabels.mustUsePhotos} value={form.mustUsePhotos} onChange={updateField} />
-          <TextArea id="photosNotToUse" label={fieldLabels.photosNotToUse} value={form.photosNotToUse} onChange={updateField} />
-          <TextArea id="visualNotes" label={fieldLabels.visualNotes} value={form.visualNotes} onChange={updateField} />
-        </FormSection>
-
-        <FormSection title="Final Notes">
+        <FormSection title="Final Notes" helper="Anything else that would help shape the final version.">
           <TextArea
             id="finalNotes"
             label={fieldLabels.finalNotes}
             value={form.finalNotes}
             onChange={updateField}
             rows={5}
-            placeholder="Anything that should shape the final site"
+            placeholder="Anything I should know before final polish — wording, links, sections, order, what to avoid, etc."
           />
         </FormSection>
 
