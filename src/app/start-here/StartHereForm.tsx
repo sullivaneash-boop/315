@@ -37,18 +37,18 @@ type FormState = {
   backupDomains: string;
   bookingEmail: string;
   contactFor: string[];
+  bestMusicOrSocialLink: string;
+  musicLinksPaste: string;
   spotify: string;
   appleMusic: string;
   soundCloud: string;
-  youtubeMusic: string;
-  audiomack: string;
+  youtubeLink: string;
   otherMusicLinks: string;
   mainVideo: string;
   otherVideos: string;
-  videoOrderNotes: string;
+  socialLinksPaste: string;
   instagram: string;
   tiktok: string;
-  youtubeSocial: string;
   twitter: string;
   otherSocials: string;
   previewNoteRows: PreviewNoteRow[];
@@ -107,18 +107,18 @@ const initialFormState: FormState = {
   backupDomains: "",
   bookingEmail: "",
   contactFor: [],
+  bestMusicOrSocialLink: "",
+  musicLinksPaste: "",
   spotify: "",
   appleMusic: "",
   soundCloud: "",
-  youtubeMusic: "",
-  audiomack: "",
+  youtubeLink: "",
   otherMusicLinks: "",
   mainVideo: "",
   otherVideos: "",
-  videoOrderNotes: "",
+  socialLinksPaste: "",
   instagram: "",
   tiktok: "",
-  youtubeSocial: "",
   twitter: "",
   otherSocials: "",
   previewNoteRows: [createPreviewNoteRow()],
@@ -144,6 +144,15 @@ function getInitialFormState() {
           key === "previewNoteRows" ? normalizePreviewNoteRows(parsed[key]) : parsed[key];
       }
     }
+    const legacyYoutubeLinks = [parsed.youtubeMusic, parsed.youtubeSocial]
+      .filter((value) => typeof value === "string" && value.trim())
+      .join("\n");
+    if (!merged.youtubeLink && legacyYoutubeLinks) {
+      merged.youtubeLink = legacyYoutubeLinks;
+    }
+    if (!merged.otherMusicLinks && typeof parsed.audiomack === "string" && parsed.audiomack.trim()) {
+      merged.otherMusicLinks = `Audiomack: ${parsed.audiomack}`;
+    }
     merged.previewNoteRows = normalizePreviewNoteRows(merged.previewNoteRows);
     return merged;
   } catch {
@@ -159,18 +168,18 @@ const fieldLabels: Record<keyof FormState, string> = {
   backupDomains: "Backup domain ideas",
   bookingEmail: "Best booking email",
   contactFor: "What should people contact you for?",
+  bestMusicOrSocialLink: "Best link to music/social",
+  musicLinksPaste: "Paste any music links here",
   spotify: "Spotify link",
   appleMusic: "Apple Music link",
   soundCloud: "SoundCloud link",
-  youtubeMusic: "YouTube link",
-  audiomack: "Audiomack link",
+  youtubeLink: "YouTube link",
   otherMusicLinks: "Other music links",
   mainVideo: "Main video to feature",
   otherVideos: "Other videos to include",
-  videoOrderNotes: "Notes on video order",
+  socialLinksPaste: "Paste any social links here",
   instagram: "Instagram",
   tiktok: "TikTok",
-  youtubeSocial: "YouTube",
   twitter: "X / Twitter",
   otherSocials: "Other socials",
   previewNoteRows: "Preview notes",
@@ -180,6 +189,16 @@ const fieldLabels: Record<keyof FormState, string> = {
   finalNotes: "Anything else to know before finalizing?",
 };
 
+type FieldBadge = "Needed" | "Optional" | "Can update later";
+
+function Badge({ children }: { children: FieldBadge }) {
+  return (
+    <span className="inline-flex border border-[var(--border)] bg-[var(--bg)] px-2 py-1 font-mono text-[9px] tracking-[0.14em] text-[var(--muted)] uppercase">
+      {children}
+    </span>
+  );
+}
+
 function Field({
   id,
   label,
@@ -188,6 +207,7 @@ function Field({
   type = "text",
   placeholder,
   required = false,
+  badge = "Optional",
 }: {
   id: keyof FormState;
   label: string;
@@ -196,15 +216,19 @@ function Field({
   type?: string;
   placeholder?: string;
   required?: boolean;
+  badge?: FieldBadge;
 }) {
   return (
     <div>
-      <label
-        htmlFor={id}
-        className="mb-1.5 block font-mono text-[11px] tracking-[0.16em] text-[var(--muted)] uppercase"
-      >
-        {label}
-      </label>
+      <div className="mb-1.5 flex flex-wrap items-center justify-between gap-2">
+        <label
+          htmlFor={id}
+          className="block font-mono text-[11px] tracking-[0.16em] text-[var(--muted)] uppercase"
+        >
+          {label}
+        </label>
+        <Badge>{badge}</Badge>
+      </div>
       <input
         id={id}
         name={id}
@@ -226,6 +250,7 @@ function TextArea({
   onChange,
   placeholder,
   rows = 4,
+  badge = "Optional",
 }: {
   id: keyof FormState;
   label: string;
@@ -233,15 +258,19 @@ function TextArea({
   onChange: (event: ChangeEvent<HTMLTextAreaElement>) => void;
   placeholder?: string;
   rows?: number;
+  badge?: FieldBadge;
 }) {
   return (
     <div>
-      <label
-        htmlFor={id}
-        className="mb-1.5 block font-mono text-[11px] tracking-[0.16em] text-[var(--muted)] uppercase"
-      >
-        {label}
-      </label>
+      <div className="mb-1.5 flex flex-wrap items-center justify-between gap-2">
+        <label
+          htmlFor={id}
+          className="block font-mono text-[11px] tracking-[0.16em] text-[var(--muted)] uppercase"
+        >
+          {label}
+        </label>
+        <Badge>{badge}</Badge>
+      </div>
       <textarea
         id={id}
         name={id}
@@ -258,22 +287,35 @@ function TextArea({
 function FormSection({
   title,
   helper,
+  defaultOpen = false,
   children,
 }: {
   title: string;
   helper?: string;
+  defaultOpen?: boolean;
   children: React.ReactNode;
 }) {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+
   return (
-    <fieldset className="border border-[var(--border)] bg-[var(--bg)] p-4 md:p-5">
-      <legend className="px-2 font-label text-2xl font-bold tracking-[0.08em] text-[var(--chalk)] uppercase">
-        {title}
-      </legend>
+    <details
+      open={isOpen}
+      onToggle={(event) => setIsOpen(event.currentTarget.open)}
+      className="group border border-[var(--border)] bg-[var(--bg)] p-4 md:p-5"
+    >
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-4">
+        <span className="font-label text-2xl font-bold tracking-[0.08em] text-[var(--chalk)] uppercase">
+          {title}
+        </span>
+        <span className="font-mono text-xl text-[var(--infrared)] transition-transform group-open:rotate-45">
+          +
+        </span>
+      </summary>
       {helper ? (
         <p className="mb-5 mt-1 text-sm leading-6 text-[var(--muted)]">{helper}</p>
       ) : null}
       <div className="grid gap-4 md:grid-cols-2">{children}</div>
-    </fieldset>
+    </details>
   );
 }
 
@@ -287,7 +329,7 @@ export default function StartHereForm() {
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(form));
     } catch {
-      // Autosave is a convenience only; the manual copy fallback still works.
+      // Autosave is a convenience only; Formspree submit still works without it.
     }
   }, [form]);
 
@@ -367,10 +409,10 @@ export default function StartHereForm() {
         setSubmitted(true);
       } else {
         const data = await res.json().catch(() => null);
-        setSubmitError(data?.errors?.[0]?.message ?? "Something went wrong. Try again or use the copy button below.");
+        setSubmitError(data?.errors?.[0]?.message ?? "Something went wrong. Try again in a minute.");
       }
     } catch {
-      setSubmitError("Could not reach the server. Check your connection or use the copy button below.");
+      setSubmitError("Could not reach the server. Check your connection and try again.");
     } finally {
       setSubmitting(false);
     }
@@ -384,19 +426,20 @@ export default function StartHereForm() {
       <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
         <div>
           <p className="text-misregister font-mono text-[11px] tracking-[0.28em] text-[var(--muted)] uppercase">
-            INTAKE
+            FILL THIS OUT WHEN YOU CAN
           </p>
           <h2 className="mt-2 font-display text-4xl text-[var(--chalk)] uppercase md:text-5xl">
-            Submit info
+            Send what you have
           </h2>
         </div>
         <p className="max-w-[380px] font-mono text-xs leading-5 text-[var(--muted)]">
-          Fill out what you have now. Anything missing can be cleaned up later.
+          You do not need every answer right now. Fill out what you have and submit.
+          Anything missing can be cleaned up later.
         </p>
       </div>
 
       <p className="mt-4 text-sm leading-6 text-[var(--muted)]">
-        Use this for links, contact info, and notes. Use the upload buttons above for photos, videos, cover art, and larger files.
+        Use this form for links, contact info, and notes. Use the upload buttons for photos, videos, cover art, and bigger files.
       </p>
 
       {submitted ? (
@@ -422,9 +465,41 @@ export default function StartHereForm() {
       ) : null}
 
       <form onSubmit={handleSubmit} className="mt-7 space-y-4">
+        <div className="border border-[var(--border)] bg-[var(--bg)] p-4 md:p-5">
+          <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p className="font-mono text-[11px] tracking-[0.2em] text-[var(--muted)] uppercase">
+                Minimum to start
+              </p>
+              <h3 className="mt-1 font-label text-2xl font-bold tracking-[0.08em] text-[var(--chalk)] uppercase">
+                Send rough links. I&apos;ll clean them up.
+              </h3>
+            </div>
+            <p className="max-w-[340px] text-sm leading-6 text-[var(--muted)]">
+              Everything else can be added below or sent later.
+            </p>
+          </div>
+          <ul className="mt-4 grid gap-2 text-sm leading-6 text-[var(--paper)] sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              "Artist name",
+              "Best contact/booking email",
+              "Main song/project",
+              "Best link to music/social",
+            ].map((item) => (
+              <li key={item} className="border border-[var(--border)] bg-[var(--panel-2)] px-4 py-3">
+                {item}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-4 text-sm leading-6 text-[var(--muted)]">
+            Doesn&apos;t need to be organized. Blank is fine if you don&apos;t have it yet.
+          </p>
+        </div>
+
         <FormSection
           title="Artist Info"
-          helper="Exact spelling matters here. This is how the name and current release focus will show on the site."
+          helper="Start with the basics. Domain ideas are helpful, but they can update later."
+          defaultOpen
         >
           <Field
             id="artistName"
@@ -433,6 +508,7 @@ export default function StartHereForm() {
             onChange={updateField}
             placeholder="315mike"
             required
+            badge="Needed"
           />
           <Field
             id="namesToAvoid"
@@ -447,16 +523,15 @@ export default function StartHereForm() {
             value={form.mainProject}
             onChange={updateField}
             placeholder="Song, EP, video, or campaign"
+            badge="Needed"
           />
-        </FormSection>
-
-        <FormSection title="Domain" helper="Drop the domain ideas you like. If nothing is purchased yet, that's fine.">
           <Field
             id="firstChoiceDomain"
             label={fieldLabels.firstChoiceDomain}
             value={form.firstChoiceDomain}
             onChange={updateField}
             placeholder="315mike.com"
+            badge="Can update later"
           />
           <Field
             id="backupDomains"
@@ -464,12 +539,14 @@ export default function StartHereForm() {
             value={form.backupDomains}
             onChange={updateField}
             placeholder="315mikeofficial.com, official315mike.com"
+            badge="Can update later"
           />
         </FormSection>
 
         <FormSection
-          title="Booking / Contact"
-          helper="Pick what people should be able to reach out about through the site."
+          title="Contact / Booking"
+          helper="Needed if people should be able to reach out from the site."
+          defaultOpen
         >
           <Field
             id="bookingEmail"
@@ -478,6 +555,15 @@ export default function StartHereForm() {
             onChange={updateField}
             type="email"
             placeholder="booking@example.com"
+            badge="Needed"
+          />
+          <Field
+            id="bestMusicOrSocialLink"
+            label={fieldLabels.bestMusicOrSocialLink}
+            value={form.bestMusicOrSocialLink}
+            onChange={updateField}
+            placeholder="Spotify, Instagram, YouTube, Linktree, etc."
+            badge="Needed"
           />
           <div className="md:col-span-2">
             <p className="mb-2 block font-mono text-[11px] tracking-[0.16em] text-[var(--muted)] uppercase">
@@ -504,31 +590,48 @@ export default function StartHereForm() {
           </div>
         </FormSection>
 
-        <FormSection title="Music Links" helper="Paste full links if you have them. If not, usernames or platform names are fine.">
+        <FormSection title="Music Links" helper="Paste full links if you have them. Rough links are fine - I'll clean them up.">
+          <div className="md:col-span-2">
+            <TextArea
+              id="musicLinksPaste"
+              label={fieldLabels.musicLinksPaste}
+              value={form.musicLinksPaste}
+              onChange={updateField}
+              rows={4}
+              placeholder="Paste any music links here - Spotify, Apple Music, SoundCloud, Audiomack, YouTube, Linktree, anything from Notes or messages."
+            />
+          </div>
           <Field id="spotify" label={fieldLabels.spotify} value={form.spotify} onChange={updateField} placeholder="https://open.spotify.com/..." />
           <Field id="appleMusic" label={fieldLabels.appleMusic} value={form.appleMusic} onChange={updateField} placeholder="https://music.apple.com/..." />
           <Field id="soundCloud" label={fieldLabels.soundCloud} value={form.soundCloud} onChange={updateField} placeholder="https://soundcloud.com/..." />
-          <Field id="youtubeMusic" label={fieldLabels.youtubeMusic} value={form.youtubeMusic} onChange={updateField} placeholder="https://youtube.com/..." />
-          <Field id="audiomack" label={fieldLabels.audiomack} value={form.audiomack} onChange={updateField} placeholder="https://audiomack.com/..." />
-          <TextArea id="otherMusicLinks" label={fieldLabels.otherMusicLinks} value={form.otherMusicLinks} onChange={updateField} rows={3} />
+          <TextArea id="otherMusicLinks" label={fieldLabels.otherMusicLinks} value={form.otherMusicLinks} onChange={updateField} rows={3} placeholder="Audiomack, Bandcamp, Linktree, or anything else." />
         </FormSection>
 
-        <FormSection title="Video Links" helper="The main video should be the first one people see.">
+        <FormSection title="Video Links" helper="Blank is fine if you do not have video links ready yet.">
           <Field id="mainVideo" label={fieldLabels.mainVideo} value={form.mainVideo} onChange={updateField} placeholder="YouTube video URL" />
-          <TextArea id="otherVideos" label={fieldLabels.otherVideos} value={form.otherVideos} onChange={updateField} rows={3} placeholder="Paste one link per line if that is easier" />
-          <TextArea id="videoOrderNotes" label={fieldLabels.videoOrderNotes} value={form.videoOrderNotes} onChange={updateField} rows={3} />
+          <TextArea id="otherVideos" label={fieldLabels.otherVideos} value={form.otherVideos} onChange={updateField} rows={3} placeholder="Paste links in the order you want them shown." />
         </FormSection>
 
-        <FormSection title="Social Links" helper="Add the main socials people should visit from the site.">
+        <FormSection title="Social Links" helper="Drop the main socials people should visit from the site. A messy list is fine.">
+          <div className="md:col-span-2">
+            <TextArea
+              id="socialLinksPaste"
+              label={fieldLabels.socialLinksPaste}
+              value={form.socialLinksPaste}
+              onChange={updateField}
+              rows={4}
+              placeholder="Paste any social links here - Instagram, TikTok, YouTube, X, Linktree, anything."
+            />
+          </div>
           <Field id="instagram" label={fieldLabels.instagram} value={form.instagram} onChange={updateField} placeholder="https://instagram.com/..." />
           <Field id="tiktok" label={fieldLabels.tiktok} value={form.tiktok} onChange={updateField} placeholder="https://tiktok.com/@..." />
-          <Field id="youtubeSocial" label={fieldLabels.youtubeSocial} value={form.youtubeSocial} onChange={updateField} placeholder="https://youtube.com/..." />
+          <Field id="youtubeLink" label={fieldLabels.youtubeLink} value={form.youtubeLink} onChange={updateField} placeholder="https://youtube.com/..." />
           <Field id="twitter" label={fieldLabels.twitter} value={form.twitter} onChange={updateField} placeholder="https://x.com/..." />
           <TextArea id="otherSocials" label={fieldLabels.otherSocials} value={form.otherSocials} onChange={updateField} rows={3} />
         </FormSection>
 
         <FormSection
-          title="Review the Current Preview"
+          title="Preview Notes"
           helper="Open the preview, look through the site, and drop any quick notes here. It does not need to be perfect or organized. Raw thoughts are fine - I'll use them to refine the final version."
         >
           <div className="md:col-span-2">
@@ -618,6 +721,7 @@ export default function StartHereForm() {
             value={form.favoriteSection}
             onChange={updateField}
             placeholder="Homepage, videos, photos, booking, etc."
+            badge="Can update later"
           />
           <TextArea
             id="mainChangeRequested"
@@ -626,6 +730,7 @@ export default function StartHereForm() {
             onChange={updateField}
             rows={3}
             placeholder="Biggest thing that feels off or needs adjusting"
+            badge="Can update later"
           />
           <TextArea
             id="doNotInclude"
@@ -634,6 +739,7 @@ export default function StartHereForm() {
             onChange={updateField}
             rows={3}
             placeholder="Any photos, videos, wording, links, or details to avoid"
+            badge="Can update later"
           />
 
           <p className="md:col-span-2 border border-[var(--border)] bg-[var(--panel-2)] px-4 py-3 text-sm leading-6 text-[var(--muted)]">
@@ -641,14 +747,15 @@ export default function StartHereForm() {
           </p>
         </FormSection>
 
-        <FormSection title="Final Notes" helper="Anything else that would help shape the final version.">
+        <FormSection title="Final Notes" helper="Loose extra notes. You can submit now and update later.">
           <TextArea
             id="finalNotes"
             label={fieldLabels.finalNotes}
             value={form.finalNotes}
             onChange={updateField}
             rows={5}
-            placeholder="Anything I should know before final polish - wording, links, sections, order, what to avoid, etc."
+            placeholder="Anything else you want me to know. Doesn't need to be organized."
+            badge="Can update later"
           />
         </FormSection>
 

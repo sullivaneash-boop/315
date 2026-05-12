@@ -201,6 +201,16 @@ export default function StartHerePage() {
             <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
               Three simple things get the final build moving.
             </p>
+            <div className="mt-5 flex flex-wrap gap-2">
+              {["Deposit", "Info", "Uploads", "Domain", "Preview"].map((chip) => (
+                <span
+                  key={chip}
+                  className="border border-[var(--border)] bg-[var(--bg)] px-3 py-1.5 font-mono text-[10px] tracking-[0.16em] text-[var(--muted)] uppercase"
+                >
+                  {chip}
+                </span>
+              ))}
+            </div>
             <div className="mt-6 grid gap-3 md:grid-cols-3">
               <a
                 href={PAYPAL_INVOICE_URL}
