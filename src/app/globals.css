@@ -1,0 +1,168 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #050505;
+  --bg-soft: #0b0b0d;
+  --panel: #111114;
+  --panel-2: #17171b;
+  --text: #f2f2ed;
+  --muted: #8f8f8b;
+  --border: rgba(255, 255, 255, 0.12);
+  --violet: #4b2c64;
+  --bruise: #27162f;
+  --red: #9b111e;
+  --infrared: #ff2b2b;
+  --chalk: #f4f1e8;
+  --paper: #d8d2c4;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 2rem;
+  --text-hero: clamp(4rem, 15vw, 13rem);
+
+  --fast: 120ms;
+  --base: 220ms;
+  --slow: 600ms;
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-soft: var(--bg-soft);
+  --color-panel: var(--panel);
+  --color-panel-2: var(--panel-2);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-violet: var(--violet);
+  --color-bruise: var(--bruise);
+  --color-red: var(--red);
+  --color-infrared: var(--infrared);
+  --color-chalk: var(--chalk);
+  --color-paper: var(--paper);
+
+  --font-display: var(--font-bebas-neue);
+  --font-label: var(--font-barlow-condensed);
+  --font-body: var(--font-barlow);
+  --font-mono: var(--font-ibm-plex-mono);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--violet);
+  color: var(--chalk);
+}
+
+/* Grain noise texture — generated inline SVG */
+.grain::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* Scanline overlay */
+.scanlines::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0.03;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 2px,
+    rgba(255, 255, 255, 0.04) 2px,
+    rgba(255, 255, 255, 0.04) 4px
+  );
+}
+
+/* Vignette overlay */
+.vignette::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 50%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+}
+
+/* Misregistered text shadow for section labels */
+.text-misregister {
+  text-shadow:
+    1px 0 var(--infrared),
+    -1px 0 var(--violet);
+}
+
+/* Glitch keyframes */
+@keyframes glitch-1 {
+  0% {
+    clip-path: inset(20% 0 60% 0);
+    transform: translate(-2px, 1px);
+  }
+  20% {
+    clip-path: inset(60% 0 10% 0);
+    transform: translate(2px, -1px);
+  }
+  40% {
+    clip-path: inset(40% 0 30% 0);
+    transform: translate(-1px, 2px);
+  }
+  60% {
+    clip-path: inset(80% 0 5% 0);
+    transform: translate(1px, -2px);
+  }
+  80% {
+    clip-path: inset(10% 0 70% 0);
+    transform: translate(2px, 1px);
+  }
+  100% {
+    clip-path: inset(50% 0 30% 0);
+    transform: translate(-2px, -1px);
+  }
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  10% { opacity: 0.8; }
+  20% { opacity: 1; }
+  30% { opacity: 0.6; }
+  35% { opacity: 1; }
+  50% { opacity: 0.9; }
+  55% { opacity: 1; }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
