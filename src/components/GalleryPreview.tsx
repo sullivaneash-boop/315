@@ -1,12 +1,33 @@
 "use client";
 
 import { motion } from "motion/react";
+import { CropMarks, CornerRoomLines } from "./doodles";
 
 const frames = [
-  { label: "FRAME 001", gradient: "from-[var(--bruise)] to-[var(--bg)]" },
-  { label: "FRAME 002", gradient: "from-[var(--panel)] to-[var(--bg-soft)]" },
-  { label: "FRAME 003", gradient: "from-[var(--panel-2)] to-[var(--violet)]/20" },
-  { label: "FRAME 004", gradient: "from-[var(--bg-soft)] to-[var(--panel)]" },
+  {
+    label: "FRAME_001",
+    subtitle: "ASSET PENDING",
+    style: "missing",
+    gradient: "from-[var(--bruise)]/60 via-[var(--panel)] to-[var(--bg)]",
+  },
+  {
+    label: "CONTACT_02A",
+    subtitle: "315-CT-02",
+    style: "xerox",
+    gradient: "from-[var(--panel)] to-[var(--bg-soft)]",
+  },
+  {
+    label: "GHOST_315",
+    subtitle: "",
+    style: "ghost",
+    gradient: "from-[var(--panel-2)] to-[var(--violet)]/10",
+  },
+  {
+    label: "CORRUPT_CONTACT",
+    subtitle: "315-CC-06",
+    style: "corrupt",
+    gradient: "from-[var(--bg-soft)] to-[var(--panel)]",
+  },
 ];
 
 export default function GalleryPreview() {
@@ -45,7 +66,7 @@ export default function GalleryPreview() {
               }}
             >
               <div
-                className={`flex aspect-square items-end justify-start bg-gradient-to-br p-4 ${frame.gradient}`}
+                className={`relative flex aspect-square flex-col items-center justify-center bg-gradient-to-br p-4 ${frame.gradient}`}
               >
                 {/* Grain per card */}
                 <div
@@ -59,9 +80,74 @@ export default function GalleryPreview() {
                 {/* Flash on hover */}
                 <div className="pointer-events-none absolute inset-0 bg-white/0 transition-all duration-75 group-hover:bg-white/[0.03]" />
 
-                <span className="relative font-mono text-[10px] tracking-[0.25em] text-[var(--muted)] md:text-xs">
-                  {frame.label}
-                </span>
+                {/* Style: Missing Frame */}
+                {frame.style === "missing" && (
+                  <>
+                    <CropMarks className="text-[var(--chalk)]" />
+                    <span className="relative font-mono text-sm tracking-[0.3em] text-[var(--chalk)] opacity-30 md:text-base">
+                      {frame.label}
+                    </span>
+                    <span className="relative mt-2 font-mono text-[8px] tracking-[0.2em] text-[var(--muted)] opacity-40">
+                      {frame.subtitle}
+                    </span>
+                  </>
+                )}
+
+                {/* Style: Xerox Contact */}
+                {frame.style === "xerox" && (
+                  <>
+                    <div className="absolute top-2 left-2 font-mono text-[7px] tracking-[0.15em] text-[var(--muted)] opacity-30">
+                      {frame.label}
+                    </div>
+                    <div className="absolute top-2 right-2 font-mono text-[7px] tracking-[0.15em] text-[var(--muted)] opacity-20">
+                      {frame.subtitle}
+                    </div>
+                    {/* Dusty border inner */}
+                    <div className="absolute inset-3 border border-dashed border-[var(--muted)]/10" />
+                    {/* Contact strip lines */}
+                    <div className="absolute bottom-3 left-3 right-3 flex gap-1">
+                      {Array.from({ length: 8 }).map((_, j) => (
+                        <div key={j} className="h-px flex-1 bg-[var(--muted)] opacity-10" />
+                      ))}
+                    </div>
+                  </>
+                )}
+
+                {/* Style: Ghost 315 */}
+                {frame.style === "ghost" && (
+                  <>
+                    <CornerRoomLines position="tl" className="absolute top-1 left-1 text-[var(--muted)] opacity-30" />
+                    <CornerRoomLines position="br" className="absolute right-1 bottom-1 text-[var(--muted)] opacity-30" />
+                    <span className="pointer-events-none select-none font-display text-[4rem] leading-none text-white opacity-[0.04] md:text-[5rem]">
+                      315
+                    </span>
+                  </>
+                )}
+
+                {/* Style: Corrupt Contact */}
+                {frame.style === "corrupt" && (
+                  <>
+                    <div className="absolute top-2 left-2 font-mono text-[7px] tracking-[0.15em] text-[var(--muted)] opacity-25">
+                      {frame.label}
+                    </div>
+                    {/* Scanline band */}
+                    <div
+                      className="pointer-events-none absolute inset-x-0 top-1/3 h-8 opacity-[0.05]"
+                      style={{
+                        background: "repeating-linear-gradient(to bottom, transparent, transparent 1px, rgba(255,255,255,0.1) 1px, rgba(255,255,255,0.1) 2px)",
+                      }}
+                    />
+                    {/* Timestamp */}
+                    <span className="relative font-mono text-[8px] tracking-[0.15em] text-[var(--muted)] opacity-25">
+                      00:00:00:00
+                    </span>
+                    <span className="relative mt-1 font-mono text-[7px] tracking-[0.15em] text-[var(--muted)] opacity-15">
+                      {frame.subtitle}
+                    </span>
+                    {/* Broken edge */}
+                    <div className="absolute right-0 top-4 bottom-4 w-px bg-[var(--infrared)] opacity-10" />
+                  </>
+                )}
               </div>
             </motion.div>
           ))}

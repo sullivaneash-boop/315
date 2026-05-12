@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import { socials } from "@/data/socials";
+import { SignalTicks } from "./doodles";
 
 export default function SocialLinks() {
   return (
@@ -15,11 +16,20 @@ export default function SocialLinks() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.5, ease: [0.2, 0.8, 0.2, 1] }}
+          className="relative"
         >
-          <p className="text-misregister font-mono text-xs tracking-[0.3em] text-[var(--muted)]">
+          {/* Scanline pulse bar behind heading */}
+          <div
+            className="pointer-events-none absolute -inset-x-4 inset-y-0 opacity-[0.03]"
+            aria-hidden="true"
+            style={{
+              background: "repeating-linear-gradient(to bottom, transparent, transparent 2px, rgba(255,255,255,0.06) 2px, rgba(255,255,255,0.06) 3px)",
+            }}
+          />
+          <p className="text-misregister relative font-mono text-xs tracking-[0.3em] text-[var(--muted)]">
             FOLLOW
           </p>
-          <h2 className="mt-2 font-display text-4xl text-[var(--chalk)] md:text-5xl">
+          <h2 className="relative mt-2 font-display text-4xl text-[var(--chalk)] md:text-5xl">
             315 everywhere.
           </h2>
         </motion.div>
@@ -59,6 +69,11 @@ export default function SocialLinks() {
               </svg>
             </motion.a>
           ))}
+        </div>
+
+        {/* Signal tick row */}
+        <div className="mt-6 flex justify-center">
+          <SignalTicks className="text-[var(--muted)]" />
         </div>
       </div>
     </section>

@@ -78,6 +78,7 @@ body {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 256px 256px;
+  animation: grain-shift 8s steps(4) infinite;
 }
 
 /* Scanline overlay */
@@ -95,6 +96,7 @@ body {
     rgba(255, 255, 255, 0.04) 2px,
     rgba(255, 255, 255, 0.04) 4px
   );
+  animation: scanline-drift 6s linear infinite;
 }
 
 /* Vignette overlay */
@@ -113,9 +115,61 @@ body {
 
 /* Misregistered text shadow for section labels */
 .text-misregister {
+  position: relative;
   text-shadow:
     1px 0 var(--infrared),
     -1px 0 var(--violet);
+}
+
+/* Flash tick blink: tiny red dot after section kickers */
+.text-misregister::after {
+  content: "";
+  display: inline-block;
+  width: 3px;
+  height: 3px;
+  margin-left: 6px;
+  vertical-align: middle;
+  background: var(--infrared);
+  border-radius: 50%;
+  animation: flash-tick 4s ease-in-out infinite;
+}
+
+@keyframes flash-tick {
+  0%, 85%, 100% { opacity: 0; }
+  90%, 95% { opacity: 0.8; }
+}
+
+/* Tape lift hover: labels shift up 2px on hover */
+.tape-lift-hover {
+  transition: transform var(--fast) var(--ease-out);
+}
+.tape-lift-hover:hover {
+  transform: translateY(-2px);
+}
+
+/* Metadata crawl: slow horizontal slide for archive labels */
+.metadata-crawl {
+  animation: metadata-crawl 12s linear infinite;
+}
+
+@keyframes metadata-crawl {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(3px); }
+}
+
+/* Grain shift: prevent frozen-looking grain */
+@keyframes grain-shift {
+  0% { background-position: 0 0; }
+  25% { background-position: -64px 32px; }
+  50% { background-position: 128px -64px; }
+  75% { background-position: -32px 128px; }
+  100% { background-position: 0 0; }
+}
+
+/* Scanline drift: scanlines slowly move downward */
+@keyframes scanline-drift {
+  0% { background-position-y: 0; }
+  100% { background-position-y: 8px; }
 }
 
 /* Glitch keyframes */
