@@ -360,33 +360,41 @@ export default function StartHerePage() {
             <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
               <div>
                 <p className="text-sm leading-6 text-[var(--muted)] md:text-base">
-                  If you do not already have a domain, buy it under your own
-                  account so you fully own it. After it is purchased, I&apos;ll
-                  help connect it to the website.
+                  If you do not already have a domain, you&apos;ll need to buy
+                  one under your own account so you fully own it. This does not
+                  have to be handled immediately for me to keep working on the
+                  build, but it does need to be done before the site can fully
+                  go live on the official domain. Once it&apos;s purchased,
+                  I&apos;ll help connect it to the website.
                 </p>
                 <div className="mt-5 grid gap-2 sm:grid-cols-2">
-                  <PrimaryLink href="https://porkbun.com">Go to Porkbun</PrimaryLink>
+                  <PrimaryLink href="https://www.namecheap.com/domains/domain-name-search/">
+                    Search on Namecheap
+                  </PrimaryLink>
                   <SecondaryLink href="https://www.namecheap.com">
-                    Go to Namecheap
+                    Open Namecheap
                   </SecondaryLink>
                 </div>
                 <p className="mt-4 text-sm leading-6 text-[var(--muted)]">
-                  Porkbun is the main recommendation because it is simple and
-                  usually lighter on annoying upsells. Namecheap is also fine
-                  if you already use it.
+                  Namecheap is a solid option because it is simple to use,
+                  beginner-friendly, and easy to manage later. The main thing
+                  is buying the domain under your own account so you keep
+                  ownership of it.
                 </p>
               </div>
               <div className="border border-[var(--border)] bg-[var(--bg)] p-4">
                 <ol className="space-y-3 text-sm leading-6 text-[var(--paper)]">
                   {[
-                    "Click \"Go to Porkbun\"",
+                    "Click \"Search on Namecheap\"",
                     "Search the domain name you want",
-                    "Choose a clean option, ideally .com if available",
-                    "Add it to cart",
-                    "Create an account using your own email",
-                    "Checkout and keep the login info saved",
-                    "Send me the domain name once it is purchased",
-                    "I'll help connect it to the finished site",
+                    "Try to get the .com if it is available",
+                    "Pick the cleanest option, not the longest or weirdest one",
+                    "Add the domain to your cart",
+                    "Create a Namecheap account using your own email",
+                    "Skip extra add-ons unless we talk about them first",
+                    "Checkout and save your login info",
+                    "Send me the domain name after it's purchased",
+                    "I'll help connect it to the finished website before launch",
                   ].map((step, index) => (
                     <li key={step} className="flex gap-3">
                       <span className="font-mono text-[10px] tracking-[0.18em] text-[var(--infrared)]">
@@ -405,9 +413,11 @@ export default function StartHerePage() {
                 </h3>
                 <ul className="mt-3 space-y-2 text-sm leading-6 text-[var(--muted)]">
                   <li>Best option is usually a short .com</li>
-                  <li>Avoid long names if possible</li>
-                  <li>Avoid hyphens</li>
-                  <li>Avoid weird spellings unless they match the artist brand</li>
+                  <li>Avoid hyphens if possible</li>
+                  <li>Avoid long names</li>
+                  <li>Avoid extra words unless needed</li>
+                  <li>Keep it easy to say out loud</li>
+                  <li>Keep it close to the artist name</li>
                   <li>Good examples: 315mike.com, 315mikeofficial.com, official315mike.com</li>
                   <li>Domain cost is separate from the website build and is usually paid yearly</li>
                 </ul>
@@ -417,13 +427,17 @@ export default function StartHerePage() {
                   Skip the add-ons
                 </h3>
                 <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
-                  When buying the domain, you do not need a website builder,
-                  logo tool, marketing package, or extra email package right
-                  now. Just buy the domain unless we talk about something else
-                  first.
+                  When checking out, you do not need to buy a website builder,
+                  logo maker, marketing package, hosting plan, or extra email
+                  package right now. For now, just buy the domain unless we
+                  talk about something else first.
                 </p>
               </div>
             </div>
+            <p className="mt-4 border border-[var(--border)] bg-[var(--bg)] px-4 py-3 text-sm leading-6 text-[var(--muted)]">
+              This part is not blocking the current build. It only needs to be
+              done before the finished site goes live on the official domain.
+            </p>
           </DetailCard>
 
           {/* Review + Launch */}

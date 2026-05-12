@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from "react";
+import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/xrejjvrl";
 const CURRENT_PREVIEW_URL = "#";
 
@@ -277,25 +277,11 @@ function FormSection({
   );
 }
 
-function buildCopyText(form: FormState) {
-  return (Object.keys(fieldLabels) as Array<keyof FormState>)
-    .map((key) => {
-      if (key === "previewNoteRows") {
-        return `${fieldLabels[key]}:\n${formatPreviewNoteRows(form.previewNoteRows)}`;
-      }
-
-      const value = Array.isArray(form[key]) ? form[key].join(", ") : form[key];
-      return `${fieldLabels[key]}:\n${value || "(blank)"}`;
-    })
-    .join("\n\n");
-}
-
 export default function StartHereForm() {
   const [form, setForm] = useState<FormState>(getInitialFormState);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
-  const [copyStatus, setCopyStatus] = useState("");
 
   useEffect(() => {
     try {
@@ -304,8 +290,6 @@ export default function StartHereForm() {
       // Autosave is a convenience only; the manual copy fallback still works.
     }
   }, [form]);
-
-  const copyText = useMemo(() => buildCopyText(form), [form]);
 
   function updateField(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
@@ -381,7 +365,6 @@ export default function StartHereForm() {
 
       if (res.ok) {
         setSubmitted(true);
-        setCopyStatus("");
       } else {
         const data = await res.json().catch(() => null);
         setSubmitError(data?.errors?.[0]?.message ?? "Something went wrong. Try again or use the copy button below.");
@@ -390,15 +373,6 @@ export default function StartHereForm() {
       setSubmitError("Could not reach the server. Check your connection or use the copy button below.");
     } finally {
       setSubmitting(false);
-    }
-  }
-
-  async function handleCopyResponses() {
-    try {
-      await navigator.clipboard.writeText(copyText);
-      setCopyStatus("Responses copied. You can paste them into a text or email.");
-    } catch {
-      setCopyStatus("Copy did not work in this browser. Select the text below and copy it manually.");
     }
   }
 
@@ -682,37 +656,12 @@ export default function StartHereForm() {
           <button
             type="submit"
             disabled={submitting}
-            className="inline-flex min-h-12 items-center justify-center border border-[var(--chalk)] bg-[var(--chalk)] px-6 py-3 font-label text-sm font-bold tracking-[0.14em] text-[var(--bg)] uppercase transition-all duration-[var(--fast)] hover:translate-x-[1px] hover:-translate-y-[1px] hover:bg-transparent hover:text-[var(--chalk)] disabled:opacity-50 disabled:pointer-events-none"
+            className="inline-flex min-h-12 items-center justify-center border border-[var(--chalk)] bg-[var(--chalk)] px-6 py-3 font-label text-sm font-bold tracking-[0.14em] text-[var(--bg)] uppercase transition-all duration-[var(--fast)] hover:translate-x-[1px] hover:-translate-y-[1px] hover:bg-transparent hover:text-[var(--chalk)] disabled:pointer-events-none disabled:opacity-50"
           >
             {submitting ? "Sending..." : "Submit Info"}
           </button>
-          <button
-            type="button"
-            onClick={handleCopyResponses}
-            className="inline-flex min-h-12 items-center justify-center border border-[var(--border)] bg-[var(--panel-2)] px-6 py-3 font-label text-sm font-bold tracking-[0.14em] text-[var(--chalk)] uppercase transition-all duration-[var(--fast)] hover:border-[var(--infrared)] hover:text-[var(--infrared)]"
-          >
-            Save/copy responses
-          </button>
         </div>
       </form>
-
-      {copyStatus ? (
-        <p className="mt-4 border border-[var(--border)] bg-[var(--bg)] px-4 py-3 font-mono text-xs leading-5 text-[var(--muted)]">
-          {copyStatus}
-        </p>
-      ) : null}
-
-      <details className="mt-4 border border-[var(--border)] bg-[var(--bg)] p-4">
-        <summary className="cursor-pointer font-mono text-[11px] tracking-[0.18em] text-[var(--muted)] uppercase">
-          Manual copy text
-        </summary>
-        <textarea
-          readOnly
-          value={copyText}
-          rows={8}
-          className="mt-4 w-full border border-[var(--border)] bg-[var(--panel-2)] px-4 py-3 font-mono text-xs leading-5 text-[var(--paper)] outline-none"
-        />
-      </details>
     </section>
   );
 }
