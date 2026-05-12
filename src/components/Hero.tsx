@@ -1,56 +1,16 @@
 "use client";
 
-import { useRef } from "react";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
+import dynamic from "next/dynamic";
 import { brandAssets } from "@/data/brandAssets";
 import DecorativeMark from "./DecorativeMark";
 
+const ASCIIText = dynamic(() => import("./ASCIIText"), { ssr: false });
+
 export default function Hero() {
-  const wordmarkRef = useRef<HTMLHeadingElement>(null);
-  const glitchRef = useRef<HTMLSpanElement>(null);
-
-  useGSAP(() => {
-    if (!wordmarkRef.current || !glitchRef.current) return;
-
-    const prefersReduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-    if (prefersReduced) return;
-
-    const tl = gsap.timeline({ delay: 0.3 });
-
-    tl.fromTo(
-      wordmarkRef.current,
-      { opacity: 0, y: 10 },
-      { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }
-    )
-      .to(glitchRef.current, {
-        opacity: 1,
-        duration: 0.05,
-      })
-      .to(glitchRef.current, {
-        x: -3,
-        skewX: 8,
-        duration: 0.06,
-      })
-      .to(glitchRef.current, {
-        x: 2,
-        skewX: -4,
-        duration: 0.05,
-      })
-      .to(glitchRef.current, {
-        x: 0,
-        skewX: 0,
-        opacity: 0,
-        duration: 0.04,
-      });
-  }, []);
-
   return (
     <section
       id="hero"
-      className="relative flex min-h-screen flex-col justify-end overflow-hidden pb-16 md:justify-center md:pb-0"
+      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden"
       style={{
         background: `
           radial-gradient(ellipse at 30% 70%, rgba(75,44,100,0.25) 0%, transparent 60%),
@@ -89,56 +49,55 @@ export default function Hero() {
         className="top-[30%] right-[2%] hidden w-[180px] opacity-[0.10] md:block md:w-[220px]"
       />
 
-      <div className="relative z-10 mx-auto w-full max-w-[1440px] px-4 pt-32 md:px-8">
-        <div className="relative max-w-3xl md:py-20">
-          {/* Wordmark */}
-          <h1
-            ref={wordmarkRef}
-            className="relative font-display leading-[0.85] text-[var(--chalk)]"
-            style={{ fontSize: "clamp(4rem, 15vw, 13rem)" }}
-          >
-            315MIKE
-            {/* Glitch double */}
-            <span
-              ref={glitchRef}
-              className="pointer-events-none absolute inset-0 text-[var(--infrared)] opacity-0 mix-blend-screen"
-              aria-hidden="true"
-              style={{ fontSize: "inherit", lineHeight: "inherit" }}
-            >
-              315MIKE
-            </span>
-          </h1>
-
-          {/* Subtitle */}
-          <p className="mt-4 font-label text-xl font-bold tracking-[0.2em] text-[var(--chalk)] md:text-2xl">
-            PARANOID OUT NOW
-          </p>
-
-          {/* CTAs */}
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:gap-4">
-            <a
-              href="https://open.spotify.com/artist/3QDBbWIix21H4AiOAJ6QJn?si=riHZHoTgT2iwCRidJg1Fyw"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group inline-flex items-center justify-center border border-[var(--chalk)] bg-transparent px-8 py-3 font-label text-sm font-bold tracking-[0.15em] text-[var(--chalk)] transition-all duration-[var(--fast)] hover:translate-x-[1px] hover:translate-y-[-1px] hover:bg-[var(--chalk)] hover:text-[var(--bg)]"
-            >
-              LISTEN NOW
-            </a>
-            <a
-              href="https://youtu.be/T-RfOVuJh2s?si=k8mDusuYOVToMD7k"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center border border-[var(--muted)] bg-transparent px-8 py-3 font-label text-sm font-bold tracking-[0.15em] text-[var(--muted)] transition-all duration-[var(--fast)] hover:translate-x-[1px] hover:translate-y-[-1px] hover:border-[var(--chalk)] hover:text-[var(--chalk)]"
-            >
-              WATCH VIDEO
-            </a>
-          </div>
-
-          {/* Metadata */}
-          <p className="mt-10 font-mono text-xs tracking-[0.2em] text-[var(--muted)]">
-            ATL / 315 / ALL PLATFORMS
-          </p>
+      {/* Centered content */}
+      <div className="relative z-10 flex w-full flex-col items-center px-4 text-center">
+        {/* ASCII Wordmark */}
+        <div
+          className="relative w-full"
+          style={{
+            height: "clamp(180px, 30vw, 340px)",
+            maxWidth: "900px",
+          }}
+        >
+          <ASCIIText
+            text="315MIKE"
+            enableWaves={false}
+            asciiFontSize={5}
+            textFontSize={200}
+            textColor="#f4f1e8"
+            planeBaseHeight={8}
+          />
         </div>
+
+        {/* Subtitle */}
+        <p className="mt-4 font-label text-xl font-bold tracking-[0.2em] text-[var(--chalk)] md:text-2xl">
+          PARANOID OUT NOW
+        </p>
+
+        {/* CTAs */}
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:gap-4">
+          <a
+            href="https://open.spotify.com/artist/3QDBbWIix21H4AiOAJ6QJn?si=riHZHoTgT2iwCRidJg1Fyw"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-center justify-center border border-[var(--chalk)] bg-transparent px-8 py-3 font-label text-sm font-bold tracking-[0.15em] text-[var(--chalk)] transition-all duration-[var(--fast)] hover:translate-x-[1px] hover:translate-y-[-1px] hover:bg-[var(--chalk)] hover:text-[var(--bg)]"
+          >
+            LISTEN NOW
+          </a>
+          <a
+            href="https://youtu.be/T-RfOVuJh2s?si=k8mDusuYOVToMD7k"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center border border-[var(--muted)] bg-transparent px-8 py-3 font-label text-sm font-bold tracking-[0.15em] text-[var(--muted)] transition-all duration-[var(--fast)] hover:translate-x-[1px] hover:translate-y-[-1px] hover:border-[var(--chalk)] hover:text-[var(--chalk)]"
+          >
+            WATCH VIDEO
+          </a>
+        </div>
+
+        {/* Metadata */}
+        <p className="mt-10 font-mono text-xs tracking-[0.2em] text-[var(--muted)]">
+          ATL / 315 / ALL PLATFORMS
+        </p>
       </div>
 
       {/* Bottom fade */}
