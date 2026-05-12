@@ -33,8 +33,6 @@ type FormState = {
   artistName: string;
   namesToAvoid: string;
   mainProject: string;
-  firstChoiceDomain: string;
-  backupDomains: string;
   bookingEmail: string;
   contactFor: string[];
   bestMusicOrSocialLink: string;
@@ -103,8 +101,6 @@ const initialFormState: FormState = {
   artistName: "",
   namesToAvoid: "",
   mainProject: "",
-  firstChoiceDomain: "",
-  backupDomains: "",
   bookingEmail: "",
   contactFor: [],
   bestMusicOrSocialLink: "",
@@ -164,8 +160,6 @@ const fieldLabels: Record<keyof FormState, string> = {
   artistName: "Artist name exactly how it should appear",
   namesToAvoid: "Any spellings/names to avoid",
   mainProject: "Main song/project to feature right now",
-  firstChoiceDomain: "First choice domain",
-  backupDomains: "Backup domain ideas",
   bookingEmail: "Best booking email",
   contactFor: "What should people contact you for?",
   bestMusicOrSocialLink: "Best link to music/social",
@@ -501,7 +495,7 @@ export default function StartHereForm() {
 
         <FormSection
           title="Artist Info"
-          helper="Start with the basics. Domain ideas are helpful, but they can update later."
+          helper="Start with the basics. Blank is fine if you do not have it yet."
           defaultOpen
         >
           <Field
@@ -527,22 +521,6 @@ export default function StartHereForm() {
             onChange={updateField}
             placeholder="Song, EP, video, or campaign"
             badge="Needed"
-          />
-          <Field
-            id="firstChoiceDomain"
-            label={fieldLabels.firstChoiceDomain}
-            value={form.firstChoiceDomain}
-            onChange={updateField}
-            placeholder="315mike.com"
-            badge="Can update later"
-          />
-          <Field
-            id="backupDomains"
-            label={fieldLabels.backupDomains}
-            value={form.backupDomains}
-            onChange={updateField}
-            placeholder="315mikeofficial.com, official315mike.com"
-            badge="Can update later"
           />
         </FormSection>
 

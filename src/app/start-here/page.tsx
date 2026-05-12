@@ -14,7 +14,7 @@ const launchSteps = [
   "Final preview is sent for review",
   "One round of small tweaks is included before launch",
   "Final payment is handled",
-  "Site goes live on the official domain",
+  "Finished site goes live",
 ];
 
 const updateItems = [
@@ -32,16 +32,6 @@ const goodToKnowItems = [
     question: "What should I do first?",
     answer:
       "Handle the deposit, submit the info form, and upload the best files you have. Anything missing can be cleaned up later.",
-  },
-  {
-    question: "What domain should I buy?",
-    answer:
-      "A short .com is best if available. Avoid hyphens, long names, or weird spellings unless they are part of the artist brand.",
-  },
-  {
-    question: "Do I own the domain?",
-    answer:
-      "Yes. The domain should be bought under your own account. I only help connect it to the finished site.",
   },
   {
     question: "What files should I upload?",
@@ -63,7 +53,7 @@ const goodToKnowItems = [
 export const metadata: Metadata = {
   title: "315mike Website Start Page",
   description:
-    "Private project start page for the 315mike website build: payment, domain, uploads, intake, review, and launch.",
+    "Private project start page for the 315mike website build: payment, uploads, intake, review, and launch.",
   robots: {
     index: false,
     follow: false,
@@ -175,8 +165,8 @@ export default function StartHerePage() {
               315mike Website Start Page
             </h1>
             <p className="mt-5 max-w-[680px] text-base leading-7 text-[var(--paper)] md:text-lg">
-              Everything needed to finish the website build: payment, domain,
-              content, uploads, final review, and launch.
+              Everything needed to finish the website build: payment, content,
+              uploads, final review, and launch.
             </p>
             <p className="mt-5 inline-flex border border-[var(--border)] bg-[var(--panel)] px-3 py-2 font-mono text-[10px] tracking-[0.2em] text-[var(--muted)] uppercase">
               This page is private and only used to organize the build.
@@ -193,7 +183,7 @@ export default function StartHerePage() {
               Three simple things get the final build moving.
             </p>
             <div className="mt-5 flex flex-wrap gap-2">
-              {["Deposit", "Info", "Uploads", "Domain", "Preview"].map((chip) => (
+              {["Deposit", "Info", "Uploads", "Preview"].map((chip) => (
                 <span
                   key={chip}
                   className="border border-[var(--border)] bg-[var(--bg)] px-3 py-1.5 font-mono text-[10px] tracking-[0.16em] text-[var(--muted)] uppercase"
@@ -219,7 +209,7 @@ export default function StartHerePage() {
               >
                 <span className="font-mono text-[10px] tracking-[0.22em] text-[var(--infrared)]">02</span>
                 <span className="font-label text-xl font-bold tracking-[0.08em] text-[var(--chalk)] uppercase">Submit Info</span>
-                <span className="text-sm leading-6 text-[var(--muted)]">Send links, domain ideas, contact info, and notes.</span>
+                <span className="text-sm leading-6 text-[var(--muted)]">Send links, contact info, and notes.</span>
               </a>
               <a
                 href={DROPBOX_OTHER_ASSETS_URL}
@@ -272,7 +262,7 @@ export default function StartHerePage() {
               </PrimaryLink>
               <p className="mt-5 text-sm leading-6 text-[var(--muted)]">
                 Deposit starts the final build. The remaining balance is due
-                before the site goes live on the official domain.
+                before the finished site goes live.
               </p>
               <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
                 Payment is handled through PayPal invoice. Card and other
@@ -306,110 +296,6 @@ export default function StartHerePage() {
 
           {/* Intake Form */}
           <StartHereForm />
-
-          {/* Domain */}
-          <Card>
-            <SectionLabel>DOMAIN</SectionLabel>
-            <h2 className="mt-2 font-display text-4xl text-[var(--chalk)] uppercase md:text-5xl">
-              How the domain works
-            </h2>
-            <div className="mt-5 grid gap-4 text-sm leading-6 text-[var(--muted)] md:grid-cols-3 md:text-base">
-              <p>You own the domain. I connect it to the site.</p>
-              <p>
-                The domain is the website name people type in, like
-                315mike.com. Buy it under your own account, then send me the
-                domain name. I&apos;ll help point it to the finished website.
-              </p>
-              <p>
-                Domain cost is separate from the website build and is usually
-                paid yearly.
-              </p>
-            </div>
-          </Card>
-
-          <DetailCard title="Need to buy your domain?">
-            <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
-              <div>
-                <p className="text-sm leading-6 text-[var(--muted)] md:text-base">
-                  If you do not already have a domain, you&apos;ll need to buy
-                  one under your own account so you fully own it. This does not
-                  have to be handled immediately for me to keep working on the
-                  build, but it does need to be done before the site can fully
-                  go live on the official domain. Once it&apos;s purchased,
-                  I&apos;ll help connect it to the website.
-                </p>
-                <div className="mt-5 grid gap-2 sm:grid-cols-2">
-                  <PrimaryLink href="https://www.namecheap.com/domains/domain-name-search/">
-                    Search on Namecheap
-                  </PrimaryLink>
-                  <SecondaryLink href="https://www.namecheap.com">
-                    Open Namecheap
-                  </SecondaryLink>
-                </div>
-                <p className="mt-4 text-sm leading-6 text-[var(--muted)]">
-                  Namecheap is a solid option because it is simple to use,
-                  beginner-friendly, and easy to manage later. The main thing
-                  is buying the domain under your own account so you keep
-                  ownership of it.
-                </p>
-              </div>
-              <div className="border border-[var(--border)] bg-[var(--bg)] p-4">
-                <ol className="space-y-3 text-sm leading-6 text-[var(--paper)]">
-                  {[
-                    "Click \"Search on Namecheap\"",
-                    "Search the domain name you want",
-                    "Try to get the .com if it is available",
-                    "Pick the cleanest option, not the longest or weirdest one",
-                    "Add the domain to your cart",
-                    "Create a Namecheap account using your own email",
-                    "Skip extra add-ons unless we talk about them first",
-                    "Checkout and save your login info",
-                    "Send me the domain name after it's purchased",
-                    "I'll help connect it to the finished website before launch",
-                  ].map((step, index) => (
-                    <li key={step} className="flex gap-3">
-                      <span className="font-mono text-[10px] tracking-[0.18em] text-[var(--infrared)]">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                      <span>{step}</span>
-                    </li>
-                  ))}
-                </ol>
-              </div>
-            </div>
-            <div className="mt-6 grid gap-4 md:grid-cols-2">
-              <div className="border border-[var(--border)] bg-[var(--bg)] p-4">
-                <h3 className="font-label text-2xl font-bold tracking-[0.08em] text-[var(--chalk)] uppercase">
-                  Domain tips
-                </h3>
-                <ul className="mt-3 space-y-2 text-sm leading-6 text-[var(--muted)]">
-                  <li>Best option is usually a short .com</li>
-                  <li>Avoid hyphens if possible</li>
-                  <li>Avoid long names</li>
-                  <li>Avoid extra words unless needed</li>
-                  <li>Keep it easy to say out loud</li>
-                  <li>Keep it close to the artist name</li>
-                  <li>Good examples: 315mike.com, 315mikeofficial.com, official315mike.com</li>
-                  <li>Domain cost is separate from the website build and is usually paid yearly</li>
-                </ul>
-              </div>
-              <div className="border border-[var(--border)] bg-[var(--bg)] p-4">
-                <h3 className="font-label text-2xl font-bold tracking-[0.08em] text-[var(--chalk)] uppercase">
-                  Skip the add-ons
-                </h3>
-                <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
-                  When checking out, you do not need to buy a website builder,
-                  logo maker, marketing package, hosting plan, or extra email
-                  package right now. For now, just buy the domain unless we
-                  talk about something else first.
-                </p>
-              </div>
-            </div>
-            <p className="mt-4 border border-[var(--border)] bg-[var(--bg)] px-4 py-3 text-sm leading-6 text-[var(--muted)]">
-              This part is not blocking the current build. It only needs to be
-              done before the finished site goes live on the official domain.
-            </p>
-          </DetailCard>
 
           {/* Review + Launch */}
           <Card>
