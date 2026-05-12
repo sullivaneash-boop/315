@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from "react";
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/xrejjvrl";
+const CURRENT_PREVIEW_URL = "#";
 
 const STORAGE_KEY = "315mike-start-here-intake";
 
@@ -13,6 +14,20 @@ const contactOptions = [
   "General Business",
   "Other",
 ];
+
+const previewPrompts = [
+  "What parts do you like?",
+  "What feels off?",
+  "Any photos, videos, or links you want changed?",
+  "Any songs/videos that should move higher or lower?",
+  "Anything missing?",
+  "Anything you definitely do not want on the final site?",
+];
+
+type PreviewNoteRow = {
+  id: string;
+  note: string;
+};
 
 type FormState = {
   artistName: string;
@@ -36,8 +51,53 @@ type FormState = {
   youtubeSocial: string;
   twitter: string;
   otherSocials: string;
+  previewNoteRows: PreviewNoteRow[];
+  favoriteSection: string;
+  mainChangeRequested: string;
+  doNotInclude: string;
   finalNotes: string;
 };
+
+let previewNoteRowCounter = 0;
+
+function createPreviewNoteRow(note = ""): PreviewNoteRow {
+  previewNoteRowCounter += 1;
+  return {
+    id: `preview-note-${previewNoteRowCounter}`,
+    note,
+  };
+}
+
+function normalizePreviewNoteRows(value: unknown): PreviewNoteRow[] {
+  if (!Array.isArray(value)) {
+    return [createPreviewNoteRow()];
+  }
+
+  const rows = value
+    .map((row) => {
+      if (!row || typeof row !== "object") return null;
+      const candidate = row as Partial<PreviewNoteRow>;
+      if (typeof candidate.note !== "string") return null;
+
+      return {
+        id: typeof candidate.id === "string" && candidate.id ? candidate.id : createPreviewNoteRow().id,
+        note: candidate.note,
+      };
+    })
+    .filter((row): row is PreviewNoteRow => Boolean(row));
+
+  return rows.length > 0 ? rows : [createPreviewNoteRow()];
+}
+
+function formatPreviewNoteRows(rows: PreviewNoteRow[]) {
+  const notes = rows.map((row) => row.note.trim()).filter(Boolean);
+
+  if (notes.length === 0) {
+    return "(blank)";
+  }
+
+  return notes.map((note, index) => `${index + 1}. ${note}`).join("\n");
+}
 
 const initialFormState: FormState = {
   artistName: "",
@@ -61,6 +121,10 @@ const initialFormState: FormState = {
   youtubeSocial: "",
   twitter: "",
   otherSocials: "",
+  previewNoteRows: [createPreviewNoteRow()],
+  favoriteSection: "",
+  mainChangeRequested: "",
+  doNotInclude: "",
   finalNotes: "",
 };
 
@@ -76,9 +140,11 @@ function getInitialFormState() {
     const merged = { ...initialFormState };
     for (const key of Object.keys(initialFormState) as Array<keyof FormState>) {
       if (key in parsed) {
-        (merged as Record<string, unknown>)[key] = parsed[key];
+        (merged as Record<string, unknown>)[key] =
+          key === "previewNoteRows" ? normalizePreviewNoteRows(parsed[key]) : parsed[key];
       }
     }
+    merged.previewNoteRows = normalizePreviewNoteRows(merged.previewNoteRows);
     return merged;
   } catch {
     return initialFormState;
@@ -107,6 +173,10 @@ const fieldLabels: Record<keyof FormState, string> = {
   youtubeSocial: "YouTube",
   twitter: "X / Twitter",
   otherSocials: "Other socials",
+  previewNoteRows: "Preview notes",
+  favoriteSection: "Favorite section so far",
+  mainChangeRequested: "Main thing you want changed",
+  doNotInclude: "Anything that should not be on the final site?",
   finalNotes: "Anything else to know before finalizing?",
 };
 
@@ -210,6 +280,10 @@ function FormSection({
 function buildCopyText(form: FormState) {
   return (Object.keys(fieldLabels) as Array<keyof FormState>)
     .map((key) => {
+      if (key === "previewNoteRows") {
+        return `${fieldLabels[key]}:\n${formatPreviewNoteRows(form.previewNoteRows)}`;
+      }
+
       const value = Array.isArray(form[key]) ? form[key].join(", ") : form[key];
       return `${fieldLabels[key]}:\n${value || "(blank)"}`;
     })
@@ -253,6 +327,35 @@ export default function StartHereForm() {
     });
   }
 
+  function updatePreviewNoteRow(id: string, note: string) {
+    setSubmitted(false);
+    setForm((current) => ({
+      ...current,
+      previewNoteRows: current.previewNoteRows.map((row) =>
+        row.id === id ? { ...row, note } : row,
+      ),
+    }));
+  }
+
+  function addPreviewNoteRow() {
+    setSubmitted(false);
+    setForm((current) => ({
+      ...current,
+      previewNoteRows: [...current.previewNoteRows, createPreviewNoteRow()],
+    }));
+  }
+
+  function removePreviewNoteRow(id: string) {
+    setSubmitted(false);
+    setForm((current) => {
+      const nextRows = current.previewNoteRows.filter((row) => row.id !== id);
+      return {
+        ...current,
+        previewNoteRows: nextRows.length > 0 ? nextRows : [createPreviewNoteRow()],
+      };
+    });
+  }
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setSubmitting(true);
@@ -261,7 +364,12 @@ export default function StartHereForm() {
     const payload: Record<string, string> = {};
     for (const [key, value] of Object.entries(form)) {
       const label = fieldLabels[key as keyof FormState] ?? key;
-      payload[label] = Array.isArray(value) ? value.join(", ") : value;
+      payload[label] =
+        key === "previewNoteRows"
+          ? formatPreviewNoteRows(form.previewNoteRows)
+          : Array.isArray(value)
+            ? value.join(", ")
+            : value;
     }
 
     try {
@@ -445,6 +553,120 @@ export default function StartHereForm() {
           <TextArea id="otherSocials" label={fieldLabels.otherSocials} value={form.otherSocials} onChange={updateField} rows={3} />
         </FormSection>
 
+        <FormSection
+          title="Review the Current Preview"
+          helper="Open the preview, look through the site, and drop any quick notes here. It does not need to be perfect or organized. Raw thoughts are fine - I'll use them to refine the final version."
+        >
+          <div className="md:col-span-2">
+            <p className="mb-2 font-mono text-[11px] tracking-[0.16em] text-[var(--muted)] uppercase">
+              Private preview link
+            </p>
+            <a
+              href={CURRENT_PREVIEW_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-12 w-full items-center justify-center border border-[var(--border)] bg-[var(--panel-2)] px-6 py-3 font-label text-sm font-bold tracking-[0.14em] text-[var(--chalk)] uppercase transition-all duration-[var(--fast)] hover:border-[var(--infrared)] hover:text-[var(--infrared)] sm:w-auto"
+            >
+              Open Current Preview
+            </a>
+          </div>
+
+          <div className="md:col-span-2">
+            <ul className="grid gap-2 text-sm leading-6 text-[var(--muted)] sm:grid-cols-2">
+              {previewPrompts.map((prompt) => (
+                <li
+                  key={prompt}
+                  className="border border-[var(--border)] bg-[var(--panel-2)] px-4 py-3"
+                >
+                  {prompt}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="md:col-span-2">
+            <div className="mb-2 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="font-mono text-[11px] tracking-[0.16em] text-[var(--muted)] uppercase">
+                  Quick preview notes
+                </p>
+                <p className="mt-1 text-sm leading-6 text-[var(--muted)]">
+                  Add notes as you go through the preview. They do not need to be organized.
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              {form.previewNoteRows.map((row, index) => (
+                <div
+                  key={row.id}
+                  className="border border-[var(--border)] bg-[var(--panel-2)] p-3"
+                >
+                  <label
+                    htmlFor={row.id}
+                    className="mb-2 block font-mono text-[10px] tracking-[0.16em] text-[var(--muted)] uppercase"
+                  >
+                    Note {index + 1}
+                  </label>
+                  <textarea
+                    id={row.id}
+                    value={row.note}
+                    onChange={(event) => updatePreviewNoteRow(row.id, event.target.value)}
+                    rows={3}
+                    placeholder="Example: Move this video higher / swap this photo / change this wording..."
+                    className="w-full resize-y border border-[var(--border)] bg-[var(--bg)] px-4 py-3 text-base leading-6 text-[var(--chalk)] outline-none transition-colors placeholder:text-[var(--muted)]/40 focus:border-[var(--violet)]"
+                  />
+                  {form.previewNoteRows.length > 1 ? (
+                    <button
+                      type="button"
+                      onClick={() => removePreviewNoteRow(row.id)}
+                      className="mt-2 inline-flex min-h-10 items-center justify-center border border-[var(--border)] px-4 py-2 font-label text-xs font-bold tracking-[0.14em] text-[var(--muted)] uppercase transition-colors hover:border-[var(--infrared)] hover:text-[var(--infrared)]"
+                    >
+                      Remove
+                    </button>
+                  ) : null}
+                </div>
+              ))}
+            </div>
+
+            <button
+              type="button"
+              onClick={addPreviewNoteRow}
+              className="mt-3 inline-flex min-h-12 w-full items-center justify-center border border-[var(--border)] bg-[var(--panel-2)] px-6 py-3 font-label text-sm font-bold tracking-[0.14em] text-[var(--chalk)] uppercase transition-all duration-[var(--fast)] hover:border-[var(--infrared)] hover:text-[var(--infrared)] sm:w-auto"
+            >
+              Add another note
+            </button>
+          </div>
+
+          <Field
+            id="favoriteSection"
+            label={fieldLabels.favoriteSection}
+            value={form.favoriteSection}
+            onChange={updateField}
+            placeholder="Homepage, videos, photos, booking, etc."
+          />
+          <TextArea
+            id="mainChangeRequested"
+            label={fieldLabels.mainChangeRequested}
+            value={form.mainChangeRequested}
+            onChange={updateField}
+            rows={3}
+            placeholder="Biggest thing that feels off or needs adjusting"
+          />
+          <TextArea
+            id="doNotInclude"
+            label={fieldLabels.doNotInclude}
+            value={form.doNotInclude}
+            onChange={updateField}
+            rows={3}
+            placeholder="Any photos, videos, wording, links, or details to avoid"
+          />
+
+          <p className="md:col-span-2 border border-[var(--border)] bg-[var(--panel-2)] px-4 py-3 text-sm leading-6 text-[var(--muted)]">
+            These notes are just for direction before final polish. One round of small tweaks is included before launch.
+          </p>
+        </FormSection>
+
         <FormSection title="Final Notes" helper="Anything else that would help shape the final version.">
           <TextArea
             id="finalNotes"
@@ -452,7 +674,7 @@ export default function StartHereForm() {
             value={form.finalNotes}
             onChange={updateField}
             rows={5}
-            placeholder="Anything I should know before final polish — wording, links, sections, order, what to avoid, etc."
+            placeholder="Anything I should know before final polish - wording, links, sections, order, what to avoid, etc."
           />
         </FormSection>
 
