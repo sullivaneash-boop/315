@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import TextureOverlay from "@/components/TextureOverlay";
 import StartHereForm from "./StartHereForm";
 
-const PAYPAL_INVOICE_URL = "#";
-const DROPBOX_PHOTOS_URL = "#";
-const DROPBOX_VIDEOS_URL = "#";
-const DROPBOX_COVER_ART_URL = "#";
-const DROPBOX_OTHER_ASSETS_URL = "#";
+const PAYPAL_INVOICE_URL = "https://www.paypal.com/invoice/p/#6TKGFGLX73LUZXP3";
+const DROPBOX_PHOTOS_URL = "https://www.dropbox.com/request/k1jrl4fv73hsonfyg8w7";
+const DROPBOX_VIDEOS_URL = "https://www.dropbox.com/request/eub9azsspfczgai7v4pe";
+const DROPBOX_COVER_ART_URL = "https://www.dropbox.com/request/b0hquyhphzgpqt7itp63";
+const DROPBOX_OTHER_ASSETS_URL = "https://www.dropbox.com/request/fu8dj3851742p85zyc1j";
 
 const projectSteps = [
   "Deposit",
