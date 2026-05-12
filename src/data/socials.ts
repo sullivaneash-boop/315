@@ -1,7 +1,7 @@
 export const socials = [
   {
     label: "Instagram",
-    url: "https://www.instagram.com/315mike/",
+    url: "https://www.instagram.com/315mikeee/",
   },
   {
     label: "Spotify",

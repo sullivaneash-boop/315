@@ -84,23 +84,28 @@ export default function VideoGrid() {
               </div>
 
               {/* Label bar */}
-              <div className="flex items-center justify-between border-t border-[var(--border)] px-4 py-3">
-                <span className="font-mono text-xs tracking-[0.2em] text-[var(--muted)]">
-                  {video.title}
-                </span>
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 12 12"
-                  fill="none"
-                  className="opacity-30"
-                >
-                  <path
-                    d="M3 9L9 3M9 3H4M9 3V8"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                  />
-                </svg>
+              <div className="border-t border-[var(--border)] px-4 py-3">
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-xs tracking-[0.2em] text-[var(--muted)]">
+                    {video.title}
+                  </span>
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 12 12"
+                    fill="none"
+                    className="opacity-30"
+                  >
+                    <path
+                      d="M3 9L9 3M9 3H4M9 3V8"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                    />
+                  </svg>
+                </div>
+                <p className={`mt-1 font-display text-[var(--chalk)] ${i === 0 ? "text-2xl md:text-3xl" : "text-xl md:text-2xl"}`}>
+                  {video.song}
+                </p>
               </div>
             </motion.a>
           ))}
